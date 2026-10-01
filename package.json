@@ -1,0 +1,29 @@
+{
+  "name": "lms-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamed-bouth/Learning-Management-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/mohamed-bouth/Learning-Management-System/issues"
+  },
+  "homepage": "https://github.com/mohamed-bouth/Learning-Management-System#readme",
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "mongoose": "^9.10.3",
+    "morgan": "^1.12.1",
+    "nodemon": "^3.1.14"
+  }
+}
