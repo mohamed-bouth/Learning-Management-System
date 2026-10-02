@@ -2,6 +2,7 @@ import express from "express";
 import {
 	getAll,
 	getOne,
+    getOneWithModules,
 	create,
 	update,
 	remove,
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.get('/', getAll);
 router.get('/:id', validateObjectId, getOne);
+router.get('/:id/modules' , validateObjectId, getOneWithModules);
 router.post('/', create);
 router.put('/:id', validateObjectId, update);
 router.delete('/:id', validateObjectId, remove);
