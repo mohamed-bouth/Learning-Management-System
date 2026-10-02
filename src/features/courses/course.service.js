@@ -1,4 +1,5 @@
 import Course from "./course.module.js";
+import Module from "../modules/module.module.js"
 
 async function getCourses(metaData) {
     const { page , limit } = metaData
