@@ -6,6 +6,7 @@ import {
 	deleteCourse,
 } from "./course.service.js";
 import paginationSchema from "../../utils/paginationValidation.js";
+import moduleModule from "../modules/module.module.js";
 
 async function getAll(req, res, next) {
 	try {
@@ -34,6 +35,29 @@ async function getAll(req, res, next) {
 async function getOne(req, res, next) {
 	try {
 		const course = await getCourseById(req.params.id);
+
+		if (!course) {
+			return res.status(404).json({
+				success: false,
+				message: "Course not found",
+			});
+		}
+
+		res.status(200).json({
+			success: true,
+			data: {
+				course,
+			},
+		});
+	} catch (error) {
+		next(error);
+	}
+}
+
+async function getOneWithModules(req, res, next) {
+	try {
+
+		const course = await getCourseById(req.params.id, ['modules']);
 
 		if (!course) {
 			return res.status(404).json({
@@ -107,4 +131,4 @@ async function remove(req, res, next) {
 	}
 }
 
-export { getAll, getOne, create, update, remove };
+export { getAll, getOne, getOneWithModules, create, update, remove };

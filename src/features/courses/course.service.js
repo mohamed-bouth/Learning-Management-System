@@ -18,11 +18,15 @@ async function getCourses(metaData) {
     }
 }
 
-function getCourseById(courseId) {
+async function getCourseById(courseId, collections = []) {
 
-	const course = Course.findById(courseId);
+	let query = Course.findById(courseId).populate('modules')
 
-    return course
+    collections.forEach(collection => {
+        query = query.populate(collection)
+    })
+
+    return query
 }
 
 function createCourse(courseData) {
