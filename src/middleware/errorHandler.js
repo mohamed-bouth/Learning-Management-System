@@ -8,7 +8,13 @@ function errorHandler(error, req, res, next) {
         });
     }
 
-
+    if(error.name === "ZodError") {
+        return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors: error.issues
+        });
+    }
 
     if (error.name === "ValidationError") {
         return res.status(400).json({

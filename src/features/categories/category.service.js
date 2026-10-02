@@ -1,10 +1,22 @@
 import Category from "./category.module.js";
 
-function getCategories() {
+async function getCategories(metaData) {
 
-    const categories = Category.find().sort({ createdAt: -1 })
+	const { page, limit } = metaData
+	const skip = (page - 1) * limit
+	const categories = await Category.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+	const total = await Category.countDocuments();
+	const totalPages = Math.ceil(total / limit)
 
-	return categories;
+	return {
+		categories,
+		meta: {
+			page,
+			limit,
+			total,
+			totalPages,
+		}
+	}
 }
 
 function getCategoryById(categoryId) {
