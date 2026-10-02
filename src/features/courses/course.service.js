@@ -1,10 +1,21 @@
 import Course from "./course.module.js";
 
-function getCourses() {
+async function getCourses(metaData) {
+    const { page , limit } = metaData
+    const skip = (page - 1) * limit
+	const courses = await Course.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+    const total = await Course.countDocuments();
+    const totalPages = Math.ceil(total / limit)
 
-	const courses = Course.find().sort({ createdAt: -1 });
-
-    return courses
+    return {
+        courses,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages,
+        }
+    }
 }
 
 function getCourseById(courseId) {
@@ -22,7 +33,7 @@ function createCourse(courseData) {
 }
 
 function updateCourse(courseId, courseData) {
-    
+
 	const course = Course.findByIdAndUpdate(
 		courseId,
 		courseData,

@@ -5,16 +5,27 @@ import {
 	updateCourse,
 	deleteCourse,
 } from "./course.service.js";
+import isNumbers from "../../utils/isNumber.js"; 
 
 async function getAll(req, res, next) {
 	try {
-		const courses = await getCourses();
+        const { page = 1 , limit = 10 } = req.query
+
+        if(!isNumbers([page,limit])){
+            const error = new Error('Check your url !')
+            error.status = 400
+            error.description = 'please type valide page and limit parameters !'
+            next(error)
+        }
+
+		const {courses , meta} = await getCourses({page,limit});
 
 		res.status(200).json({
 			success: true,
 			data: {
 				courses,
 			},
+            meta,
 		});
 	} catch (error) {
 		next(error);
