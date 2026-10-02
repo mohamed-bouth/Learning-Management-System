@@ -20,7 +20,7 @@ async function getCourses(metaData) {
 
 async function getCourseById(courseId, collections = []) {
 
-	let query = Course.findById(courseId).populate('modules')
+	let query = Course.findById(courseId)
 
     collections.forEach(collection => {
         query = query.populate(collection)
