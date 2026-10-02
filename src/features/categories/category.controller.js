@@ -7,16 +7,27 @@ import {
     deleteCategory,
 } from "./category.service.js";
 
+import paginationSchema from "../../utils/paginationValidation.js";
 
 async function getAll(req, res, next) {
     try {
-        const categories = await getCategories();
+
+        const { page = 1, limit = 10 } = req.query
+
+        const result = paginationSchema.safeParse({ page, limit });
+
+        if (!result.success) {
+           return next(result.error)
+        }
+
+        const { categories, meta } = await getCategories({ page, limit });
 
         res.status(200).json({
             success: true,
             data: {
                 categories,
             },
+            meta
         });
     } catch (error) {
         next(error);
