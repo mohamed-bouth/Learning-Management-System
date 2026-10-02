@@ -1,4 +1,4 @@
-import mongoose, { mongo, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const moduleShema = mongoose.Schema({
     course : {
@@ -27,6 +27,16 @@ const moduleShema = mongoose.Schema({
         required: true
     }
 },{ timestamps: true })
+
+moduleShema.virtual("resources", {
+    ref: "Resource",
+    localField: "_id",
+    foreignField: "module"
+});
+
+moduleShema.set("toJSON", {
+    virtuals: true
+});
 
 
 export default mongoose.model('Module' , moduleShema)
