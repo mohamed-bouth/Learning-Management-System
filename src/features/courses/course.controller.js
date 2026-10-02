@@ -5,17 +5,16 @@ import {
 	updateCourse,
 	deleteCourse,
 } from "./course.service.js";
-import isNumbers from "../../utils/isNumber.js"; 
+import paginationSchema from "../../utils/paginationValidation.js";
 
 async function getAll(req, res, next) {
 	try {
         const { page = 1 , limit = 10 } = req.query
 
-        if(!isNumbers([page,limit])){
-            const error = new Error('Check your url !')
-            error.status = 400
-            error.description = 'please type valide page and limit parameters !'
-            next(error)
+        const result = paginationSchema.safeParse({ page, limit });
+
+        if (!result.success) {
+           return next(result.error)
         }
 
 		const {courses , meta} = await getCourses({page,limit});
