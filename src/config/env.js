@@ -4,7 +4,8 @@ const vars = process.env
 
 const env = {
     mongoUri : vars.MONGO_URI,
-    backendPort : vars.BACK_END_PORT
+    backendPort : vars.BACK_END_PORT,
+    backendHost : vars.BACK_END_HOST
 }
 
 export default env

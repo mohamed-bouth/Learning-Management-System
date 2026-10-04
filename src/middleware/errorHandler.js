@@ -4,7 +4,7 @@ function errorHandler(error, req, res, next) {
     if (error.code === 11000) {
         return res.status(409).json({
             success: false,
-            message,
+            message: error.message
         });
     }
 
