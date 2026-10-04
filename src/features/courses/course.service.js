@@ -1,10 +1,43 @@
 import Course from "./course.module.js";
 import Module from "../modules/module.module.js"
+import Category from "../categories/category.module.js"
 
 async function getCourses(metaData) {
-    const { page , limit } = metaData
+    const { category , level , title , sortBy , order } = metaData
+
+    console.log(sortBy,order)
+
+    const categoryAfterSearch = await Category.find({
+        name: {
+            $regex: category,
+            $options: "i"
+        }
+    })
+
+    const categoryIds = categoryAfterSearch.map(category => category._id);
+
+    const filterOption = { category: categoryIds, level, title }
+    const filterOptionToArray = Object.entries(filterOption)
+
+    const filter = filterOptionToArray.reduce((filterObj, option) => {
+        if (Array.isArray(option[1])) {
+            filterObj[option[0]] = {
+                $in: option[1]
+            }
+        }
+        else if (option[1]) {
+            filterObj[option[0]] = {
+                $regex: option[1],
+                $options: "i"
+            }
+        }
+        return filterObj
+    }, {})
+
+
+    const { page, limit } = metaData
     const skip = (page - 1) * limit
-	const courses = await Course.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+    const courses = await Course.find(filter).skip(skip).limit(limit).sort({ [sortBy]: order === "asc" ? 1 : -1 }).populate('category');
     const total = await Course.countDocuments();
     const totalPages = Math.ceil(total / limit)
 
@@ -21,7 +54,7 @@ async function getCourses(metaData) {
 
 async function getCourseById(courseId, collections = []) {
 
-	let query = Course.findById(courseId)
+    let query = Course.findById(courseId)
 
     collections.forEach(collection => {
         query = query.populate(collection)
@@ -32,33 +65,33 @@ async function getCourseById(courseId, collections = []) {
 
 function createCourse(courseData) {
 
-	const course = Course.create(courseData);
+    const course = Course.create(courseData);
 
     return course
 }
 
 function updateCourse(courseId, courseData) {
 
-	const course = Course.findByIdAndUpdate(
-		courseId,
-		courseData,
-		{ new: true, runValidators: true },
-	);
+    const course = Course.findByIdAndUpdate(
+        courseId,
+        courseData,
+        { new: true, runValidators: true },
+    );
 
     return course
 }
 
 function deleteCourse(courseId) {
 
-	const course = Course.findByIdAndDelete(courseId);
+    const course = Course.findByIdAndDelete(courseId);
 
-    return course 
+    return course
 }
 
 export {
-	getCourses,
-	getCourseById,
-	createCourse,
-	updateCourse,
-	deleteCourse,
+    getCourses,
+    getCourseById,
+    createCourse,
+    updateCourse,
+    deleteCourse,
 };

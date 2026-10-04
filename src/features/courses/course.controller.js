@@ -6,26 +6,35 @@ import {
 	deleteCourse,
 } from "./course.service.js";
 import paginationSchema from "../../utils/paginationValidation.js";
+import filterCourseSchema from "../../utils/filterCourseValidation.js";
 import moduleModule from "../modules/module.module.js";
 
 async function getAll(req, res, next) {
 	try {
-        const { page = 1 , limit = 10 } = req.query
+		const { page, limit } = req.query
 
-        const result = paginationSchema.safeParse({ page, limit });
+		const { category, level, title, sortBy, order } = req.query
 
-        if (!result.success) {
-           return next(result.error)
-        }
+		const pagination = paginationSchema.safeParse({ page, limit });
 
-		const {courses , meta} = await getCourses({page,limit});
+		const filter = filterCourseSchema.safeParse({ category, level, title, sortBy, order })
+
+		if (!pagination.success) {
+			return next(result.error)
+		}
+
+		if (!filter.success) {
+			return next(filter.error)
+		}
+
+		const { courses, meta } = await getCourses({ ...pagination.data, ...filter.data });
 
 		res.status(200).json({
 			success: true,
 			data: {
 				courses,
 			},
-            meta,
+			meta,
 		});
 	} catch (error) {
 		next(error);
