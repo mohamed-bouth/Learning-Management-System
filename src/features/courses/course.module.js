@@ -36,6 +36,11 @@ const courseSchema = mongoose.Schema({
         type: String,
         required: true,
         enum: ['draft','inpublished','published'],
+        default : 'draft',
+    },
+    publicationDate: {
+        type: Date,
+        default: null
     }
 },{ timestamps: true })
 

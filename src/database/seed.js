@@ -33,7 +33,8 @@ async function seed() {
                 level: "normal",
                 objective: "Learn the funcamentals of JavaScript and how to Code on real life",
                 estimatedDuration: 60,
-                publicationStatus: "published"
+                publicationStatus: "published",
+                publicationDate: "2026-11-04T12:17:48.770Z"
             },
             {
                 category: categories[1]._id,
@@ -42,7 +43,8 @@ async function seed() {
                 level: "hard",
                 objective: "Learn how node.js is working and the different between them and browser runtime ",
                 estimatedDuration: 60,
-                publicationStatus: "draft"
+                publicationStatus: "draft",
+                publicationDate: "2026-10-04T12:17:48.770Z"
             }
         ]);
 
