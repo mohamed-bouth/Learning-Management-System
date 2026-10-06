@@ -118,5 +118,24 @@ async function seed() {
         console.log("Disconnected from MongoDB");
     }
 }
+const seedPermissions = async () => {
+  try {
+    await dbConnection();
+
+    await Permission.deleteMany();
+    console.log('Anciennes permissions supprimées');
+
+    const createdPermissions = await Permission.insertMany(permissionsData);
+    console.log(`${createdPermissions.length} permissions créées avec succès !`);
+
+    await mongoose.connection.close();
+    process.exit(0);
+  } catch (error) {
+    console.error('Erreur lors du seeding :', error.message);
+    process.exit(1);
+  }
+};
+
+seedPermissions();
 
 seed();
