@@ -5,6 +5,7 @@ import Category from "../features/categories/category.module.js"
 import Course from "../features/courses/course.module.js"
 import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
+import Permission from "../features/permissions/permission.module.js"
 
 
 async function drop() {
@@ -17,6 +18,7 @@ async function drop() {
         await Resource.deleteMany();
         await Module.deleteMany();
         await Course.deleteMany();
+        await Permission.deleteMany();
 
     } catch (error) {
 

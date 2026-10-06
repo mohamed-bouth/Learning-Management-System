@@ -6,7 +6,23 @@ import Category from "../features/categories/category.module.js"
 import Course from "../features/courses/course.module.js"
 import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
+import permissionsData from "./data/permissions.data.js";
 
+const seedPermissions = async () => {
+    try {
+        await dbConnection();
+
+        const createdPermissions = await Permission.insertMany(permissionsData);
+        console.log(`${createdPermissions.length} permissions created with success !`);
+
+    } catch (error) {
+        console.error('Seed error :', error.message);
+    } finally {
+        await mongoose.connection.close();
+    }
+};
+
+seedPermissions();
 
 async function seed() {
     try {
@@ -118,24 +134,4 @@ async function seed() {
         console.log("Disconnected from MongoDB");
     }
 }
-const seedPermissions = async () => {
-  try {
-    await dbConnection();
-
-    await Permission.deleteMany();
-    console.log('Anciennes permissions supprimées');
-
-    const createdPermissions = await Permission.insertMany(permissionsData);
-    console.log(`${createdPermissions.length} permissions créées avec succès !`);
-
-    await mongoose.connection.close();
-    process.exit(0);
-  } catch (error) {
-    console.error('Erreur lors du seeding :', error.message);
-    process.exit(1);
-  }
-};
-
-seedPermissions();
-
 seed();

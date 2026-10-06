@@ -1,16 +1,18 @@
-export const permissionsData = [
+const permissionsData = [
 
-  { name: 'course:create' },
-  { name: 'course:read' },
-  { name: 'course:update' },
-  { name: 'course:delete' },
+    { name: 'course:get' },
+    { name: 'course:modules' },
+    { name: 'course:create' },
+    { name: 'course:update' },
+    { name: 'course:delete' },
 
-  { name: 'module:create' },
-  { name: 'module:update' },
-  { name: 'module:delete' },
+    { name: 'category:get' },
+    { name: 'category:create' },
+    { name: 'category:update' },
+    { name: 'category:delete' },
 
-  { name: 'quiz:create' },
-  { name: 'quiz:submit' },
-  
-  { name: 'user:manage' }
+    { name: 'module:resources' },
+
 ];
+
+export default permissionsData
