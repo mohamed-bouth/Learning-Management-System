@@ -6,29 +6,16 @@ import Category from "../features/categories/category.module.js"
 import Course from "../features/courses/course.module.js"
 import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
+import Permission from "../features/permissions/permission.module.js";
 import permissionsData from "./data/permissions.data.js";
-
-const seedPermissions = async () => {
-    try {
-        await dbConnection();
-
-        const createdPermissions = await Permission.insertMany(permissionsData);
-        console.log(`${createdPermissions.length} permissions created with success !`);
-
-    } catch (error) {
-        console.error('Seed error :', error.message);
-    } finally {
-        await mongoose.connection.close();
-    }
-};
-
-seedPermissions();
 
 async function seed() {
     try {
         await mongoose.connect(env.mongoUri);
 
         console.log("Connected to MongoDB");
+
+        const createdPermissions = await Permission.insertMany(permissionsData);
 
         const categories = await Category.insertMany([
             {
