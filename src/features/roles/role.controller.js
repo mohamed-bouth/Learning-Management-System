@@ -1,7 +1,7 @@
 import D from "dotenv";
 import { getAllRoleServices , getRoleByIdServices , createRoleServices , deleteRoleServices , updateRolePermission } from "./role.services";
 
-export async function getAAllRoles(req,res,next) {
+export async function getAllRoles(req,res,next) {
     try{
         const Roles = await getAllRoleServices();
         res.status(200).json({status :'success',data : Roles})
