@@ -1,18 +1,19 @@
 import Role from "./role.module"
 
-export async function createRole(roleData) {
+export async function createRoleServices(roleData) {
     const newRole = new Role(roleData);
     const saveRole = await newRole.save();
     return saveRole;
 }
 
-export async function getAllRole() {
+export async function getAllRoleServices() {
     const roles = await Role.find().populate('permissions');
     return roles;
 }
 
-export async function getRoleById(id) {
+export async function getRoleByIdServices(id) {
     const role = await Role.findById('id').populate('permissions');
+    return role;
 }
 
 export async function updateRolePermission(roleIds,permissionIds) {
@@ -24,7 +25,7 @@ export async function updateRolePermission(roleIds,permissionIds) {
     return updatedRole ;
 }
 
-export async function deleteRole(id) {
+export async function deleteRoleServices(id) {
     const deletedRole =  await Role.findByIdAndDelete(id);
     return deleteRole;
 }
