@@ -1,5 +1,4 @@
-import D from "dotenv";
-import { getAllRoleServices , getRoleByIdServices , createRoleServices , deleteRoleServices , updateRolePermission } from "./role.services";
+import { getAllRoleServices , getRoleByIdServices , createRoleServices , deleteRoleServices ,updateRoleServices, updateRolePermission } from "./role.services.js";
 
 export async function getAllRoles(req,res,next) {
     try{
@@ -29,11 +28,23 @@ export async function createNewRole(req,res,next) {
     }
 }
 
+export async function updateRole(req,res,next) {
+    try{
+        const {id} = req.params;
+        const updateRole = await updateRoleServices(id , req.body);
+        res.status(200).json({status : 'succes' , data : {
+            role : updateRole
+        }})
+    }catch(error){
+        next(error)
+    }
+}
+
 export async function updatePermissions(req,res,next) {
     try{
         const {id} = req.params;
-        const {permissionIds} = req.body;
-        const update = await updateRolePermission(id,permissionIds);
+        const {permissionsIds} = req.body;
+        const update = await updateRolePermission(id,permissionsIds);
         res.status(200).json({status : 'succes' , data :update})
     }catch(error){
         next(error)
@@ -44,7 +55,7 @@ export async function deleteRole(req,res,next) {
     try{
         const {id} = req.params;
         const deletedRole = await deleteRoleServices(id) ;
-        res.status(200).json({status:'succes',data:deletedRole})
+        res.status(204).send();
     }catch(error){
         next(error)
     }
