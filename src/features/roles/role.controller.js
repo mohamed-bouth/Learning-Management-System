@@ -1,4 +1,4 @@
-import { getAllRoleServices , getRoleByIdServices , createRoleServices , deleteRoleServices ,updateRoleServices, updateRolePermission } from "./role.services.js";
+import { getAllRoleServices , getRoleByIdServices , createRoleServices , deleteRoleServices ,updateRoleServices, updateRolePermission } from "./role.service.js";
 
 export async function getAllRoles(req,res,next) {
     try{

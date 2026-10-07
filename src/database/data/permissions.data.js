@@ -11,6 +11,14 @@ const permissionsData = [
     { name: 'category:update' },
     { name: 'category:delete' },
 
+    { name: 'roles:get' },
+    { name: 'role:get' },
+    { name: 'role:create' },
+    { name: 'role:update' },
+    { name: 'role:delete' },
+    { name: 'permissions:set' },
+
+
     { name: 'module:resources' },
 
 ];
