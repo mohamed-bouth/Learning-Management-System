@@ -6,13 +6,29 @@ import Category from "../features/categories/category.module.js"
 import Course from "../features/courses/course.module.js"
 import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
+import Permission from "../features/permissions/permission.module.js";
+import Role from "../features/roles/role.module.js";
 
+import rolesData from "./data/roles.data.js";
+import permissionsData from "./data/permissions.data.js";
 
 async function seed() {
     try {
         await mongoose.connect(env.mongoUri);
 
         console.log("Connected to MongoDB");
+
+        const createdPermissions = await Permission.insertMany(permissionsData);
+
+        const permMap = {};
+        createdPermissions.forEach(p => permMap[p.name] = p._id);
+
+        const formattedRoles = rolesData.map(role => ({
+        name: role.name,
+        permissions: role.permissions.map(pName => permMap[pName])
+        }));
+
+        await Role.insertMany(formattedRoles);
 
         const categories = await Category.insertMany([
             {
@@ -118,5 +134,4 @@ async function seed() {
         console.log("Disconnected from MongoDB");
     }
 }
-
 seed();
