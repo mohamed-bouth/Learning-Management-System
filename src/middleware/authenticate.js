@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import env from "../config/env.js"
 
-function authenticate(req, res, next) {
+async function authenticate(req, res, next) {
 
     const authHeader = req.headers.authorization
 
@@ -12,13 +12,11 @@ function authenticate(req, res, next) {
         return next(error)
     }
 
-    const token = authHeader.split(' ')[1``]
+    const token = authHeader.split(' ')[1]
 
     const payload = jwt.verify(token, env.jwtSecret)
 
     req.user = payload
-
-    console.log(req)
 
     next()
 }
