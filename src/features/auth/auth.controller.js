@@ -1,4 +1,5 @@
-import { registerService, loginService } from "./auth.service.js";
+import { success } from "zod";
+import { registerService, loginService, refreshTokenService } from "./auth.service.js";
 import { registerSchema, loginSchema } from "./auth.validation.js"
 
 async function register(req, res, next) {
@@ -45,4 +46,21 @@ async function login(req, res, next) {
     }
 }
 
-export { register, login }
+async function refresh(req, res, next) {
+    try {
+        const authorization = req.headers.authorization
+        const token = authorization.split(' ')[1]
+
+        const newToken = await refreshTokenService(token)
+
+        return res.status(200).json({
+            success: true,
+            token: newToken
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export { register, login, refresh }
