@@ -1,4 +1,12 @@
 services:
+
+  api:
+    build: .
+    container_name: lms-api
+    ports:
+    - "${BACK_END_HOST}:${BACK_END_PORT}:${BACK_END_PORT}"
+    env_file:
+    - .docker.env
   mongodb:
     image: mongo:7.0
     container_name: mongodb
@@ -7,6 +15,5 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - mongodb_data:/data/db
-
 volumes:
   mongodb_data:
