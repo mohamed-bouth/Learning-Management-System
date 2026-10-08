@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import generateToken from '../../utils/generateJwt.js'
 import generateRefreshToken from '../../utils/generateRefreshToken.js'
 import getExpirationDate from '../../utils/getExpirationDate.js'
+import env from '../../config/env.js'
 
 export async function registerService(body) {
 
@@ -62,9 +63,18 @@ export async function loginService(body) {
         throw error
     }
 
-    const JwtToken = generateToken({ userId: user._id })
-
     user = removePasswordHashFromUserObj(user)
+
+    const refreshTokenValue = generateRefreshToken()
+    const expiresAt = getExpirationDate()
+
+    const refreshToken = await RefreshToken.create({
+        tokenHash: refreshTokenValue,
+        userId: user._id,
+        expiresAt,
+    })
+
+    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id })
 
     return {
         user,
@@ -74,7 +84,9 @@ export async function loginService(body) {
 
 export async function refreshTokenService(token) {
 
-    const tokenDecoded = jwt.decode(token)
+    const tokenDecoded = jwt.verify(token, env.jwtSecret, {
+        ignoreExpiration: true
+    })
 
     if (!tokenDecoded?.userId || !tokenDecoded?.sessionId) {
         const error = new Error("Invalid access token");
