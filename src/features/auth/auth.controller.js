@@ -1,5 +1,5 @@
 import { success } from "zod";
-import { registerService, loginService, refreshTokenService } from "./auth.service.js";
+import { registerService, loginService, refreshTokenService, logoutService } from "./auth.service.js";
 import { registerSchema, loginSchema } from "./auth.validation.js"
 
 async function register(req, res, next) {
@@ -63,4 +63,16 @@ async function refresh(req, res, next) {
     }
 }
 
-export { register, login, refresh }
+async function logout (req, res, next) {
+    try {
+
+        await logoutService(req.user.sessionId)
+
+        return res.status(204).send()
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export { register, login, refresh, logout }

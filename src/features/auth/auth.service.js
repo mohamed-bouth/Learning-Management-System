@@ -117,3 +117,19 @@ export async function refreshTokenService(token) {
 
     return newAccessToken
 }
+
+export async function logoutService(sessionId) {
+
+    const session = await RefreshToken.findOneAndDelete({
+        _id: sessionId
+    })
+
+    if (!session) {
+        const error = new Error("Session not found")
+        error.name = "AuthenticationError"
+        error.status = 401
+        throw error
+    }
+
+    return true
+}
