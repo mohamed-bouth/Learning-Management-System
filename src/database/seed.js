@@ -8,7 +8,9 @@ import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
 import Permission from "../features/permissions/permission.module.js";
 import Role from "../features/roles/role.module.js";
+import User from "../features/users/user.module.js"
 
+import usersData from "./data/users.data.js";
 import rolesData from "./data/roles.data.js";
 import permissionsData from "./data/permissions.data.js";
 
@@ -28,7 +30,19 @@ async function seed() {
         permissions: role.permissions.map(pName => permMap[pName])
         }));
 
-        await Role.insertMany(formattedRoles);
+        const roles = await Role.insertMany(formattedRoles);
+
+        const usersDatawithRoles = usersData.reduce((array, user) => {
+            roles.forEach(role => {
+                if(role.name === user.name){
+                    user.roleId = role._id.toString()
+                    array.push(user)
+                }
+            })
+            return array
+        },[])
+
+        const users = await User.insertMany(usersDatawithRoles)
 
         const categories = await Category.insertMany([
             {
@@ -43,6 +57,7 @@ async function seed() {
 
         const courses = await Course.insertMany([
             {
+                userId: users[1]._id,
                 category: categories[0]._id,
                 title: "JavaScript Fundamentals",
                 description: "Learn the fundamentals of JavaScript.",
@@ -53,6 +68,7 @@ async function seed() {
                 publicationDate: "2026-11-04T12:17:48.770Z"
             },
             {
+                userId: users[1]._id,
                 category: categories[1]._id,
                 title: "Node.js and Express",
                 description: "Build backend applications with Node.js and Express.",

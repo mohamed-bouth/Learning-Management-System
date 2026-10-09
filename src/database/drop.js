@@ -7,6 +7,7 @@ import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
 import Permission from "../features/permissions/permission.module.js"
 import Role from "../features/roles/role.module.js"
+import User from "../features/users/user.module.js"
 
 
 async function drop() {
@@ -15,12 +16,13 @@ async function drop() {
 
         console.log("Connected to MongoDB");
 
-        await Role.deleteMany();
         await Resource.deleteMany();
         await Category.deleteMany();
         await Module.deleteMany();
         await Course.deleteMany();
         await Permission.deleteMany();
+        await Role.deleteMany();
+        await User.deleteMany();
 
     } catch (error) {
 
