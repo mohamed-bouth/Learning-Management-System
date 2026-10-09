@@ -63,8 +63,8 @@ async function getCourseById(courseId, collections = []) {
     return query
 }
 
-function createCourse(courseData) {
-
+function createCourse(courseData, userId) {
+    courseData["userId"] = userId
     const course = Course.create(courseData);
 
     return course
