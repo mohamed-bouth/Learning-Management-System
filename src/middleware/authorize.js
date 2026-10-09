@@ -1,7 +1,7 @@
 import Role from "../features/roles/role.module.js";
 import Permission from "../features/permissions/permission.module.js";
 
-export function authorize(permissionName) {
+function authorize(permissionName) {
     return async function (req, res, next) {
         try {
             if (!req.user || !req.user.roleId) {
@@ -32,3 +32,5 @@ export function authorize(permissionName) {
         }
     };
 }
+
+export default authorize

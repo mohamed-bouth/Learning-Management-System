@@ -1,5 +1,6 @@
 import { hashPassword, verifyPassword, removePasswordHashFromUserObj } from '../../utils/password.service.js'
-import User from '../users/users.module.js'
+import User from '../users/user.module.js'
+import Role from "../roles/role.module.js"
 import RefreshToken from "../refreshTokens/refreshToken.module.js"
 import jwt from 'jsonwebtoken'
 import generateToken from '../../utils/generateJwt.js'
@@ -25,12 +26,19 @@ export async function registerService(body) {
         throw error
     }
 
+    const role = await Role.findOne({name: "learner"})
+
+    if(!role){
+        throw new Error()
+    }
+
     const passwordHash = await hashPassword(password)
 
     let user = await User.create({
         name,
         email,
         passwordHash,
+        roleId: role._id,
         status: "active"
     })
 
@@ -44,7 +52,7 @@ export async function registerService(body) {
         expiresAt,
     })
 
-    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id })
+    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.roleId })
 
     return {
         user,
@@ -74,7 +82,7 @@ export async function loginService(body) {
         expiresAt,
     })
 
-    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id })
+    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.roleId })
 
     return {
         user,
@@ -113,7 +121,7 @@ export async function refreshTokenService(token) {
         throw error
     }
 
-    const newAccessToken = generateToken({ userId: tokenDecoded.userId, sessionId: tokenDecoded.sessionId })
+    const newAccessToken = generateToken({ userId: tokenDecoded.userId, sessionId: tokenDecoded.sessionId, roleId: tokenDecoded.roleId })
 
     return newAccessToken
 }
