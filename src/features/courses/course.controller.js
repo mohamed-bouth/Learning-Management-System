@@ -88,7 +88,7 @@ async function getOneWithModules(req, res, next) {
 
 async function create(req, res, next) {
 	try {
-		const course = await createCourse(req.body);
+		const course = await createCourse(req.body, req.user.userId);
 
 		res.status(201).json({
 			success: true,

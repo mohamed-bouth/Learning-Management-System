@@ -3,11 +3,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
     {
-        role: {
+        roleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
-            required: false,
-            // make it true after lfarh finish roleAndPermission feature
+            required: true,
         },
 
         name: {
