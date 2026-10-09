@@ -20,10 +20,19 @@ const options = {
             version: "1.0.0",
             description: "Learning Management System API",
         },
+        
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+                },
+            },
+        },
 
         servers,
     },
-
     apis: ["./docs/swagger/*.swagger.js"],
 };
 
