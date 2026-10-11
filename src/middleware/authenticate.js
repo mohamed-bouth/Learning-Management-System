@@ -14,11 +14,16 @@ async function authenticate(req, res, next) {
 
     const token = authHeader.split(' ')[1]
 
-    const payload = jwt.verify(token, env.jwtSecret)
-
-    req.user = payload
-
-    next()
+    try {
+        const payload = jwt.verify(token, env.jwtSecret)
+        req.user = payload
+        next()
+    }catch(error){
+        error.status = 401
+        error.name = "AuthenticationError"
+        error.message = "Invalid or expired token"
+        return next(error)
+    }
 }
 
 export default authenticate
