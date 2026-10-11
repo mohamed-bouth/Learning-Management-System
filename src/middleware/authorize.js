@@ -5,8 +5,9 @@ function authorize(permissionName) {
     return async function (req, res, next) {
         try {
             if (!req.user || !req.user.roleId) {
-                const error = new Error("Vous devez d'abord vous connecter");
-                error.statusCode = 401;
+                const error = new Error("authentication error !");
+                error.name = 'AuthenticationError'
+                error.status = 401;
                 return next(error);
             }
 
@@ -14,15 +15,17 @@ function authorize(permissionName) {
             let role = await Role.findOne({ _id: roleId });
             let permission = await Permission.findOne({ name: permissionName });
             if (!role || !permission) {
-                const error = new Error("Rôle ou permission introuvable");
-                error.statusCode = 404;
+                const error = new Error("Rôle or permission introuvable !");
+                error.name = 'AuthorizationError'
+                error.status = 500;
                 return next(error);
             }
             const rolePermissions = role.permissions.map(p => p.toString());
 
             if (!rolePermissions.includes(permission._id.toString())) {
-                const error = new Error("Accès interdit : permission " + permissionName + " requise");
-                error.statusCode = 403;
+                const error = new Error("Access prohibited !");
+                error.name = 'AuthorizationError'
+                error.status = 403;
                 return next(error);
             }
             return next();

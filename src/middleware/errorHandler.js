@@ -1,8 +1,15 @@
 function errorHandler(error, req, res, next) {
     console.error(error);
 
-    if (error.name === "AuthenticationError"){
+    if (error.name === "AuthenticationError" || error.status === 401){
         return res.status(401).json({
+            success: false,
+            message: error.message,
+        });
+    }
+
+    if (error.name === "AuthorizationError" || error.status === 403){
+        return res.status(403).json({
             success: false,
             message: error.message,
         });
