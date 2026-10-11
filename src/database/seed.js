@@ -35,7 +35,7 @@ async function seed() {
         const usersDatawithRoles = usersData.reduce((array, user) => {
             roles.forEach(role => {
                 if(role.name === user.name){
-                    user.roleId = role._id.toString()
+                    user.role = role._id.toString()
                     array.push(user)
                 }
             })
@@ -57,7 +57,7 @@ async function seed() {
 
         const courses = await Course.insertMany([
             {
-                userId: users[1]._id,
+                user: users[1]._id,
                 category: categories[0]._id,
                 title: "JavaScript Fundamentals",
                 description: "Learn the fundamentals of JavaScript.",
@@ -68,7 +68,7 @@ async function seed() {
                 publicationDate: "2026-11-04T12:17:48.770Z"
             },
             {
-                userId: users[1]._id,
+                user: users[1]._id,
                 category: categories[1]._id,
                 title: "Node.js and Express",
                 description: "Build backend applications with Node.js and Express.",

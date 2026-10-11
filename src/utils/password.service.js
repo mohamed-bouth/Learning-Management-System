@@ -23,7 +23,7 @@ function removePasswordHashFromUserObj(user) {
         name: user.name,
         email: user.email,
         status: user.status,
-        roleId: user.roleId,
+        role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
     }))

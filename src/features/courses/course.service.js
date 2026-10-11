@@ -65,7 +65,7 @@ async function getCourseById(courseId, collections = []) {
 }
 
 function createCourse(courseData, userId) {
-    courseData["userId"] = userId
+    courseData["user"] = userId
     const course = Course.create(courseData);
 
     return course
@@ -73,7 +73,7 @@ function createCourse(courseData, userId) {
 
 async function updateCourse(courseId, courseData, userId) {
 
-    const result = await isHeOwningThat(userId, courseId, Course)
+    const result = await isHeOwningThat(userId, courseId, Course, "user")
 
     if(!result.success){
         throw result.error
