@@ -49,6 +49,13 @@ async function login(req, res, next) {
 async function refresh(req, res, next) {
     try {
         const authorization = req.headers.authorization
+
+        if (!authorization || !authorization.startsWith('Bearer ')) {
+            const error = new Error("Authentication required")
+            error.name = "AuthenticationError"
+            error.status = 401
+            throw error
+        }
         const token = authorization.split(' ')[1]
 
         const newToken = await refreshTokenService(token)
