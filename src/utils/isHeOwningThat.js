@@ -1,4 +1,4 @@
-async function isHeOwningThat(userId, thingId, Model, UserIdOnModel = "userId"){
+async function isHeOwningThat(userId, thingId, Model, UserIdOnModel){
 
     const thing = await Model.findById(thingId)
 

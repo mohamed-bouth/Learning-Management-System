@@ -38,7 +38,7 @@ export async function registerService(body) {
         name,
         email,
         passwordHash,
-        roleId: role._id,
+        role: role._id,
         status: "active"
     })
 
@@ -48,11 +48,11 @@ export async function registerService(body) {
 
     const refreshToken = await RefreshToken.create({
         tokenHash: refreshTokenValue,
-        userId: user._id,
+        user: user._id,
         expiresAt,
     })
 
-    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.roleId })
+    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.role })
 
     return {
         user,
@@ -78,11 +78,11 @@ export async function loginService(body) {
 
     const refreshToken = await RefreshToken.create({
         tokenHash: refreshTokenValue,
-        userId: user._id,
+        user: user._id,
         expiresAt,
     })
 
-    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.roleId })
+    const JwtToken = generateToken({ userId: user._id, sessionId: refreshToken._id, roleId: user.role })
 
     return {
         user,
