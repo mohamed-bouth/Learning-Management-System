@@ -103,7 +103,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
 	try {
-		const course = await updateCourse(req.params.id, req.body);
+		const course = await updateCourse(req.params.id, req.body, req.user.userId);
 
 		if (!course) {
 			return res.status(404).json({
@@ -125,7 +125,7 @@ async function update(req, res, next) {
 
 async function remove(req, res, next) {
 	try {
-		const course = await deleteCourse(req.params.id);
+		const course = await deleteCourse(req.params.id, req.user.userId);
 
 		if (!course) {
 			return res.status(404).json({

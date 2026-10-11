@@ -1,6 +1,7 @@
 import Course from "./course.module.js";
 import Module from "../modules/module.module.js"
 import Category from "../categories/category.module.js"
+import isHeOwningThat from "../../utils/isHeOwningThat.js";
 
 async function getCourses(metaData) {
     const { category , level , title , sortBy , order } = metaData
@@ -70,9 +71,15 @@ function createCourse(courseData, userId) {
     return course
 }
 
-function updateCourse(courseId, courseData) {
+async function updateCourse(courseId, courseData, userId) {
 
-    const course = Course.findByIdAndUpdate(
+    const result = await isHeOwningThat(userId, courseId, Course)
+
+    if(!result.success){
+        throw result.error
+    }
+
+    const course = await Course.findByIdAndUpdate(
         courseId,
         courseData,
         { new: true, runValidators: true },
@@ -81,9 +88,15 @@ function updateCourse(courseId, courseData) {
     return course
 }
 
-function deleteCourse(courseId) {
+async function deleteCourse(courseId, userId) {
 
-    const course = Course.findByIdAndDelete(courseId);
+    const result = await isHeOwningThat(userId, courseId, Course)
+
+    if(!result.success){
+        throw result.error
+    }
+
+    const course = await Course.findByIdAndDelete(courseId);
 
     return course
 }
