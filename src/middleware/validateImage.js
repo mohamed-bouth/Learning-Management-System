@@ -20,15 +20,13 @@ export async function validateImage(req, res, next) {
             req.file.buffer
         );
 
-        console.log("detectedType :", detectedType)
-
         if (!detectedType || !allowedMimeTypes.includes(detectedType.mime)) {
             const error = new Error("Image is required!")
             error.name = "ValidationError"
             return next(error)
         }
 
-        req.file.detectedMimeType = detectedType.mime;
+        req.file.ext = detectedType.ext;
 
         next();
     } catch (error) {
