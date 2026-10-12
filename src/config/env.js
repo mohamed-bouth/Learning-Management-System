@@ -13,7 +13,8 @@ const env = {
     r2AccessKeyId: vars.R2_ACCESS_KEY_ID,
     r2SecretAccessKey: vars.R2_SECRET_ACCESS_KEY,
     r2BucketName: vars.R2_BUCKET_NAME,
-    r2Endpoint: vars.R2_ENDPOINT
+    r2Endpoint: vars.R2_ENDPOINT,
+    r2PublicUrl: vars.R2_PUBLIC_URL
 }
 
 export default env
