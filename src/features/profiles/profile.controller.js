@@ -60,6 +60,33 @@ async function updateProfileEmail(req, res, next) {
     }
 }
 
+async function updateProfileImage(req, res, next) {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "Profile image is required"
+            });
+        }
+
+        const { originalname, mimetype, size, buffer } = req.file;
+
+        console.log({
+            originalname,
+            mimetype,
+            size,
+            bufferLength: buffer.length
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Image received successfully"
+        });
+    }catch (error) {
+        next(error)
+    }
+}
+
 async function updateAccountPassword(req, res, next) {
     try {
 
@@ -82,4 +109,4 @@ async function updateAccountPassword(req, res, next) {
     }
 }
 
-export { getProfileInfo, updateProfileName, updateProfileEmail, updateAccountPassword }
+export { getProfileInfo, updateProfileName, updateProfileEmail, updateProfileImage, updateAccountPassword }
