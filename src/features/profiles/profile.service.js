@@ -5,7 +5,7 @@ import { hashPassword, verifyPassword } from "../../utils/password.service.js";
 import { randomBytes } from "crypto";
 import env from "../../config/env.js";
 import cloudflareR2 from "../../config/cloudflareR2.js";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 async function getProfileService(userId) {
 
@@ -31,6 +31,20 @@ async function updateProfileEmailService(userId, body) {
 
 async function updateProfileImageService(userId, file) {
 
+    const user = await User.findById(userId)
+
+    if (!user) {
+        const error = new Error("User not found.");
+        error.name = "NotFoundError";
+        throw error;
+    }
+
+    let oldImage = null
+
+    if(user.profileImage){
+        oldImage = await Image.findById(user.profileImage)
+    }
+
     const extension = file.ext;
     const mimeType = file.mimetype;
     const generatedString = randomBytes(32).toString('hex')
@@ -50,7 +64,7 @@ async function updateProfileImageService(userId, file) {
         throw new Error("Upload failed!")
     }
 
-    const image = await Image.create({
+    const newImage = await Image.create({
         key: imageKey,
         mimeType,
         size: file.size,
@@ -59,9 +73,20 @@ async function updateProfileImageService(userId, file) {
         purpose: "profile"
     })
 
-    const user = await User.findByIdAndUpdate(userId , {profileImage : image._id} , { new: true }).populate('profileImage')
+    if (oldImage) {
+        await cloudflareR2.send(
+            new DeleteObjectCommand({
+                Bucket: env.r2BucketName,
+                Key: oldImage.key
+            })
+        );
 
-    return user
+        await Image.findByIdAndDelete(oldImage._id);
+    }
+
+    const newuser = await User.findByIdAndUpdate(userId , {profileImage : newImage._id} , { new: true }).populate('profileImage')
+
+    return newuser
 }
 
 async function updateAccountPasswordService(userId, body) {
