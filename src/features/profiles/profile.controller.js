@@ -1,4 +1,4 @@
-import { getProfileService, updateProfileNameService, updateProfileEmailService, updateAccountPasswordService } from "./profile.service.js"
+import { getProfileService, updateProfileNameService, updateProfileEmailService, updateAccountPasswordService, updateProfileImageService } from "./profile.service.js"
 import { updateAccountPasswordSchema, updateProfileEmailSchema, updateProfileNameSchema } from "./profile.validation.js"
 
 async function getProfileInfo(req, res, next) {
@@ -69,17 +69,13 @@ async function updateProfileImage(req, res, next) {
             });
         }
 
-        const { originalname, mimetype, size, buffer } = req.file;
-
-        console.log({
-            originalname,
-            mimetype,
-            size,
-            bufferLength: buffer.length
-        });
+        const result =  await updateProfileImageService(req.user.userId, req.file)
 
         return res.status(200).json({
             success: true,
+            data: {
+                image: result
+            },
             message: "Image received successfully"
         });
     }catch (error) {
