@@ -1,5 +1,6 @@
 
 import mongoose from "mongoose";
+import { required } from "zod/mini";
 
 const userSchema = new mongoose.Schema(
     {
@@ -7,6 +8,12 @@ const userSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
             required: true,
+        },
+
+        profileImage: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image",
+            required: false,
         },
 
         name: {
