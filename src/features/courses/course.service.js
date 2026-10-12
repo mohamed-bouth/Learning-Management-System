@@ -90,7 +90,7 @@ async function updateCourse(courseId, courseData, userId) {
 
 async function deleteCourse(courseId, userId) {
 
-    const result = await isHeOwningThat(userId, courseId, Course)
+    const result = await isHeOwningThat(userId, courseId, Course, "user")
 
     if(!result.success){
         throw result.error
