@@ -27,12 +27,21 @@ cp .env.example .env
 Set the values for your local setup:
 
 ```env
+# Database url
 MONGO_URI=mongodb://127.0.0.1:27017/lms
+# Host and Port Values
 BACK_END_PORT=3000
 BACK_END_HOST=0.0.0.0
+# JWT Token Configiration
 JWT_SECRET=replace_with_a_strong_random_secret
 JWT_EXPIRES_IN=15m
 REFRESH_TOKEN_EXPIRES_IN=15d
+# Cloudflare R2
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=lms-project
+R2_ENDPOINT=
 ```
 
 **Important:** Use a strong, private `JWT_SECRET`. Never commit `.env` or real secrets to Git.
@@ -88,12 +97,21 @@ Docker Compose uses a separate environment file because MongoDB is reached by th
 2. Make sure `.docker.env` contains:
 
    ```env
+   # Database url
    MONGO_URI=mongodb://mongodb:27017/lms
+   # Host and Port Values
    BACK_END_PORT=3000
    BACK_END_HOST=0.0.0.0
+   # JWT Token Configiration
    JWT_SECRET=replace_with_a_strong_random_secret
    JWT_EXPIRES_IN=15m
    REFRESH_TOKEN_EXPIRES_IN=15d
+   # Cloudflare R2
+   R2_ACCOUNT_ID=
+   R2_ACCESS_KEY_ID=
+   R2_SECRET_ACCESS_KEY=
+   R2_BUCKET_NAME=lms-project
+   R2_ENDPOINT=
    ```
 
 3. Build and start the services:
@@ -108,6 +126,28 @@ Docker Compose uses a separate environment file because MongoDB is reached by th
    docker compose ps
    docker compose logs -f api
    ```
+
+5. Run the following command:
+
+   ```bash
+   rs.initiate({
+   _id: "rs0",
+   members: [
+      { _id: 0, host: "localhost:27017" }
+   ]
+   })
+   ```
+
+Wait a few seconds, then verify the Replica Set status:
+
+   ```bash
+   docker exec -it mongodb mongosh
+   rs.status()
+   ```
+
+Make sure the member's state is PRIMARY.
+
+Note: Do not run rs.initiate() again if the Replica Set has already been initialized. Its configuration persists in the MongoDB data directory.
 
 5. Open Swagger UI:
 

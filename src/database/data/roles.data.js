@@ -17,7 +17,11 @@ const rolesData = [
       'role:update',
       'role:delete',
       'permissions:set',
-      'module:resources'
+      'module:read',
+      'module:create',
+      'module:update',
+      'module:resources',
+      'module:delete'
     ]
   },
   {
@@ -28,7 +32,11 @@ const rolesData = [
       'course:create',
       'course:update',
       'category:get',
-      'module:resources'
+      'module:read',
+      'module:create',
+      'module:update',
+      'module:resources',
+      'module:delete'
     ]
   },
   {
@@ -37,6 +45,7 @@ const rolesData = [
       'course:get',
       'course:modules',
       'category:get',
+      'module:read',
       'module:resources'
     ]
   }
