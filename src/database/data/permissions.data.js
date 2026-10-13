@@ -67,6 +67,22 @@ const permissionsData = [
 
   // Modules and resources
   {
+    name: "module:read",
+    description: "empty"
+  },
+  {
+    name: "module:create",
+    description: "empty"
+  },
+  {
+    name: "module:update",
+    description: "empty"
+  },
+  {
+    name: "module:delete",
+    description: "empty"
+  },
+  {
     name: "module:resources",
     description: "Allows viewing the resources associated with a module.",
   },
