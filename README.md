@@ -28,7 +28,7 @@ Set the values for your local setup:
 
 ```env
 # Database url
-MONGO_URI=mongodb://127.0.0.1:27017/lms
+MONGO_URI=mongodb://127.0.0.1:27017/lms?replicaSet=rs0
 # Host and Port Values
 BACK_END_PORT=3000
 BACK_END_HOST=0.0.0.0
@@ -49,15 +49,25 @@ R2_ENDPOINT=
 ## 3. Run Locally
 
 1. Make sure MongoDB is running and accessible at `127.0.0.1:27017`.
-2. Install dependencies with `npm install`.
-3. Configure `.env` as described above.
-4. Start the API:
+2. Make sure you configure MongoDB as a single-node replica set:
+
+   ```bash
+   rs.initiate({
+   _id: "rs0",
+   members: [
+      { _id: 0, host: "localhost:27017" }
+   ]
+   })
+   ```
+3. Install dependencies with `npm install`.
+4. Configure `.env` as described above.
+5. Start the API:
 
    ```bash
    npm run dev
    ```
 
-5. Open the Swagger UI at:
+6. Open the Swagger UI at:
 
    ```text
    http://localhost:3000/api-docs
@@ -98,7 +108,7 @@ Docker Compose uses a separate environment file because MongoDB is reached by th
 
    ```env
    # Database url
-   MONGO_URI=mongodb://mongodb:27017/lms
+   MONGO_URI=mongodb://mongodb:27017/lms?replicaSet=rs0
    # Host and Port Values
    BACK_END_PORT=3000
    BACK_END_HOST=0.0.0.0
@@ -130,6 +140,7 @@ Docker Compose uses a separate environment file because MongoDB is reached by th
 5. Run the following command:
 
    ```bash
+   docker exec -it mongodb mongosh
    rs.initiate({
    _id: "rs0",
    members: [
@@ -138,10 +149,9 @@ Docker Compose uses a separate environment file because MongoDB is reached by th
    })
    ```
 
-Wait a few seconds, then verify the Replica Set status:
+6. Wait a few seconds, then verify the Replica Set status:
 
    ```bash
-   docker exec -it mongodb mongosh
    rs.status()
    ```
 
@@ -149,7 +159,7 @@ Make sure the member's state is PRIMARY.
 
 Note: Do not run rs.initiate() again if the Replica Set has already been initialized. Its configuration persists in the MongoDB data directory.
 
-5. Open Swagger UI:
+7. Open Swagger UI:
 
    ```text
    http://localhost:3000/api-docs
@@ -187,7 +197,7 @@ docker compose exec api npm run db:drop
 
 | Variable | Purpose | Example |
 |---|---|---|
-| `MONGO_URI` | MongoDB connection string | `mongodb://127.0.0.1:27017/lms` locally; `mongodb://mongodb:27017/lms` in Docker |
+| `MONGO_URI` | MongoDB connection string | `mongodb://127.0.0.1:27017/lms?replicaSet=rs0` locally; `mongodb://mongodb:27017/lms?replicaSet=rs0` in Docker |
 | `BACK_END_HOST` | Host/interface the API binds to | `0.0.0.0` |
 | `BACK_END_PORT` | API port | `3000` |
 | `JWT_SECRET` | Secret used to sign JWTs | Use a strong random secret |
@@ -204,6 +214,7 @@ docker compose exec api npm run db:drop
 | `docker compose up --build -d` | Build and start Docker services |
 | `docker compose logs -f api` | Follow API logs |
 | `docker compose down` | Stop and remove containers |
+| `docker exec -it mongodb mongosh` | Accessing the MongoDB terminal via Mongosh |
 
 ## API Documentation
 
