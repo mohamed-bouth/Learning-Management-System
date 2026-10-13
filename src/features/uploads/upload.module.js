@@ -1,7 +1,7 @@
 
 import mongoose from "mongoose";
 
-const imageSchema = new mongoose.Schema(
+const uploadSchema = new mongoose.Schema(
     {
         key: {
             type: String,
@@ -13,7 +13,6 @@ const imageSchema = new mongoose.Schema(
         mimeType: {
             type: String,
             required: true,
-            enum: ["image/jpeg", "image/png", "image/webp"]
         },
 
         size: {
@@ -43,4 +42,4 @@ const imageSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.model("Image", imageSchema);
+export default mongoose.model("Upload", uploadSchema);

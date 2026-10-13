@@ -1,6 +1,6 @@
 import User from "../users/user.module.js";
 import Role from "../roles/role.module.js"
-import Image from "../images/image.module.js"
+import Upload from "../uploads/upload.module.js"
 import { hashPassword, verifyPassword } from "../../utils/password.service.js";
 import { randomBytes } from "crypto";
 import env from "../../config/env.js";
@@ -11,7 +11,10 @@ async function getProfileService(userId) {
 
     const userInfo = await User.findById(userId).populate({path: "role", select: "name"}).populate({path: "profileImage", select: "key"})
 
-    userInfo.profileImage.key = `${env.r2PublicUrl}/${userInfo.profileImage.key}`
+    if(userInfo.profileImage){
+        userInfo.profileImage.key = `${env.r2PublicUrl}/${userInfo.profileImage.key}`
+    }
+    
     return userInfo
 }
 
@@ -42,7 +45,7 @@ async function updateProfileImageService(userId, file) {
     let oldImage = null
 
     if(user.profileImage){
-        oldImage = await Image.findById(user.profileImage)
+        oldImage = await Upload.findById(user.profileImage)
     }
 
     const extension = file.ext;
@@ -64,7 +67,7 @@ async function updateProfileImageService(userId, file) {
         throw new Error("Upload failed!")
     }
 
-    const newImage = await Image.create({
+    const newImage = await Upload.create({
         key: imageKey,
         mimeType,
         size: file.size,
@@ -81,7 +84,7 @@ async function updateProfileImageService(userId, file) {
             })
         );
 
-        await Image.findByIdAndDelete(oldImage._id);
+        await Upload.findByIdAndDelete(oldImage._id);
     }
 
     const newuser = await User.findByIdAndUpdate(userId , {profileImage : newImage._id} , { new: true }).populate('profileImage')

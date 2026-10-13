@@ -111,9 +111,6 @@ async function seed() {
                 title: "JavaScript Variables",
                 description: "Introduction to variables in JavaScript.",
                 type: "article",
-                url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types",
-                originalFileName: "javascript-variables.pdf",
-                fileSize: 1024,
                 estimatedDuration: "15 minutes",
                 displayOrder: 1
             },
@@ -122,9 +119,6 @@ async function seed() {
                 title: "Data Types Video",
                 description: "Video explaining JavaScript data types.",
                 type: "video",
-                url: "https://example.com/javascript-data-types",
-                originalFileName: "data-types.mp4",
-                fileSize: 2048,
                 estimatedDuration: "20 minutes",
                 displayOrder: 2
             },
@@ -133,9 +127,6 @@ async function seed() {
                 title: "Functions Exercise",
                 description: "Practice JavaScript functions.",
                 type: "exercise",
-                url: "https://example.com/functions-exercise",
-                originalFileName: "functions-exercise.pdf",
-                fileSize: 1500,
                 estimatedDuration: "30 minutes",
                 displayOrder: 1
             }

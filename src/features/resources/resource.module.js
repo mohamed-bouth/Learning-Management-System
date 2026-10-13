@@ -1,10 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const resourceSchema = mongoose.Schema({
-    module : {
-        type : Schema.Types.ObjectId,
+    module: {
+        type : mongoose.Schema.Types.ObjectId,
         ref : 'Module',
-        required : true
+        required: true
+    },
+    upload: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Upload',
+        required: false
     },
     title: {
         type: String,
@@ -25,15 +30,7 @@ const resourceSchema = mongoose.Schema({
     },
     url: {
         type: String,
-        required: true,
-    },
-    originalFileName: {
-        type: String,
-        required: true,
-    },
-    fileSize: {
-        type: Number,
-        required: true
+        required: false,
     },
     estimatedDuration: {
         type: String,
