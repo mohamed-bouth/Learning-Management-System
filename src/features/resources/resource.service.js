@@ -1,6 +1,8 @@
 import Resource from "./resource.module.js";
 import Module from "../modules/module.module.js";
 import "../uploads/upload.module.js";
+import { removeUploadedFile, uploadFile } from "../uploads/upload.service.js";
+import env from "../../config/env.js";
 
 async function getResources({ page, limit }) {
 	const skip = (page - 1) * limit;
@@ -23,7 +25,10 @@ function getResourceById(resourceId) {
 	return Resource.findById(resourceId).populate("module").populate("upload");
 }
 
-async function createResource(resourceData) {
+async function createResource(resourceData, file, userId) {
+
+    const upload = await uploadFile(file, "resource", resourceData.module, userId)
+
 	const module = await Module.findById(resourceData.module);
 
 	if (!module) {
@@ -32,10 +37,19 @@ async function createResource(resourceData) {
 		throw error;
 	}
 
-	return Resource.create(resourceData);
+    if(upload) {
+        resourceData.upload = upload._id
+        resourceData.url = `${env.r2PublicUrl}/${upload.key}`
+    }
+
+	const resource = await Resource.create(resourceData)
+
+    await resource.populate("upload");
+
+    return resource
 }
 
-async function updateResource(resourceId, resourceData) {
+async function updateResource(resourceId, resourceData, file, userId) {
 	if (resourceData.module) {
 		const module = await Module.findById(resourceData.module);
 
@@ -46,12 +60,32 @@ async function updateResource(resourceId, resourceData) {
 		}
 	}
 
-    const resource = await Resource.findByIdAndUpdate(resourceId,resourceData,{ new: true, runValidators: true },).populate("module").populate("upload");
+    const oldresource = await Resource.findById(resourceId).populate("upload")
 
-	return resource
+    if(oldresource.upload){
+        await removeUploadedFile(oldresource.upload.key)
+    }
+
+    const upload = await uploadFile(file, "resource", resourceData.module, userId)
+
+    if(upload) {
+        resourceData.upload = upload._id
+        resourceData.url = `${env.r2PublicUrl}/${upload.key}`
+    }
+    
+
+    const newresource = await Resource.findByIdAndUpdate(resourceId,resourceData,{ new: true },).populate("module").populate("upload");
+
+	return newresource
 }
 
-function deleteResource(resourceId) {
+async function deleteResource(resourceId) {
+
+    const resource = await Resource.findById(resourceId).populate("upload")
+
+    if(resource.upload){
+        await removeUploadedFile(resource.upload.key)
+    }
 
 	return Resource.findByIdAndDelete(resourceId);
 }

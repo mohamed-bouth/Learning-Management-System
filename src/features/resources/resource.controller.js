@@ -43,7 +43,7 @@ async function getOne(req, res, next) {
 
 async function create(req, res, next) {
 	try {
-		const resource = await createResource(req.body);
+		const resource = await createResource(req.body, req.file, req.user.userId);
 
 		return res.status(201).json({
 			success: true,
@@ -56,7 +56,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
 	try {
-		const resource = await updateResource(req.params.id, req.body);
+		const resource = await updateResource(req.params.id, req.body, req.file , req.user.userId);
 
 		if (!resource) {
 			return res.status(404).json({
