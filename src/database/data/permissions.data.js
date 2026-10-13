@@ -86,6 +86,22 @@ const permissionsData = [
     name: "module:resources",
     description: "Allows viewing the resources associated with a module.",
   },
+  {
+    name: "resource:read",
+    description: "Allows viewing resources.",
+  },
+  {
+    name: "resource:create",
+    description: "Allows creating resources.",
+  },
+  {
+    name: "resource:update",
+    description: "Allows updating resources.",
+  },
+  {
+    name: "resource:delete",
+    description: "Allows deleting resources.",
+  },
 ];
 
 export default permissionsData;

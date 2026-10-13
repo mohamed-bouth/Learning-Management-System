@@ -34,7 +34,8 @@ const resourceSchema = mongoose.Schema({
     },
     estimatedDuration: {
         type: String,
-        required: true
+        required: true,
+        min: 0
     },
     displayOrder: {
         type: Number,
