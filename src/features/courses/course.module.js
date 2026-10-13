@@ -37,6 +37,7 @@ const courseSchema = mongoose.Schema(
     estimatedDuration: {
       type: Number,
       required: true,
+      min: 0
     },
     publicationStatus: {
       type: String,

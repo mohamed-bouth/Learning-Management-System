@@ -24,7 +24,8 @@ const moduleShema = mongoose.Schema({
     },
     estimatedDuration: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     }
 },{ timestamps: true })
 
