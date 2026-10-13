@@ -1,9 +1,23 @@
 import multer from "multer";
 
 const allowedMimeTypes = [
+    // Images
     "image/jpeg",
     "image/png",
-    "image/webp"
+    "image/webp",
+
+    // Documents
+    "application/pdf",
+    "application/json",
+    "text/plain",
+    "text/csv",
+
+    // Videos
+    "video/mp4",
+    "video/webm",
+
+    // Archives
+    "application/zip",
 ];
 
 const upload = multer({
