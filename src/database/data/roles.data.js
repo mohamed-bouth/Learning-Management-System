@@ -25,7 +25,11 @@ const rolesData = [
       'resource:read',
       'resource:create',
       'resource:update',
-      'resource:delete'
+      'resource:delete',
+      'enrollment:read',
+      'enrollment:create',
+      'enrollment:update',
+      'enrollment:delete'
     ]
   },
   {
@@ -44,7 +48,11 @@ const rolesData = [
       'resource:read',
       'resource:create',
       'resource:update',
-      'resource:delete'
+      'resource:delete',
+      'enrollment:read',
+      'enrollment:create',
+      'enrollment:update',
+      'enrollment:delete'
     ]
   },
   {
@@ -55,7 +63,9 @@ const rolesData = [
       'category:get',
       'module:read',
       'module:resources',
-      'resource:read'
+      'resource:read',
+      'enrollment:read',
+      'enrollment:create'
     ]
   }
 ];

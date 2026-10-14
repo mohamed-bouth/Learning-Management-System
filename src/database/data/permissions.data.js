@@ -102,6 +102,22 @@ const permissionsData = [
     name: "resource:delete",
     description: "Allows deleting resources.",
   },
+  {
+    name: "enrollment:read",
+    description: "Allows viewing enrollments.",
+  },
+  {
+    name: "enrollment:create",
+    description: "Allows creating enrollments.",
+  },
+  {
+    name: "enrollment:update",
+    description: "Allows updating enrollments.",
+  },
+  {
+    name: "enrollment:delete",
+    description: "Allows deleting enrollments.",
+  },
 ];
 
 export default permissionsData;
