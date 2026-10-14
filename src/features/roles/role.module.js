@@ -10,8 +10,18 @@ const roleSchema = new mongoose.Schema(
     },
     permissions: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Permission",
+        permission: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Permission",
+            required: true
+        },
+
+        scope: {
+            type: String,
+            enum: ["all", "own", "published"],
+            default: "all",
+            required: true
+        }
       },
     ],
   },

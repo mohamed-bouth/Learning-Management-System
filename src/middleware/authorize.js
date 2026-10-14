@@ -20,14 +20,20 @@ function authorize(permissionName) {
                 error.status = 500;
                 return next(error);
             }
-            const rolePermissions = role.permissions.map(p => p.toString());
+            
+            const permissionAttached = role.permissions.find((item) =>
+                item.permission.toString() === permission._id.toString()
+            );
 
-            if (!rolePermissions.includes(permission._id.toString())) {
+            if (!permissionAttached) {
                 const error = new Error("Access prohibited !");
                 error.name = 'AuthorizationError'
                 error.status = 403;
                 return next(error);
             }
+
+            req.user.permission = permissionAttached;
+
             return next();
 
         } catch (error) {
