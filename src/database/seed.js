@@ -6,6 +6,7 @@ import Category from "../features/categories/category.module.js"
 import Course from "../features/courses/course.module.js"
 import Module from "../features/modules/module.module.js"
 import Resource from "../features/resources/resource.module.js"
+import Enrollment from "../features/enrollments/enrollment.module.js";
 import Permission from "../features/permissions/permission.module.js";
 import Role from "../features/roles/role.module.js";
 import User from "../features/users/user.module.js"
@@ -129,6 +130,23 @@ async function seed() {
                 type: "exercise",
                 estimatedDuration: "30 minutes",
                 displayOrder: 1
+            }
+        ]);
+
+        await Enrollment.insertMany([
+            {
+                learner: users[2]._id,
+                course: courses[0]._id,
+                enrolledAt: new Date("2026-10-10T10:00:00.000Z"),
+                status: "active",
+                progress: 25
+            },
+            {
+                learner: users[2]._id,
+                course: courses[1]._id,
+                enrolledAt: new Date("2026-10-11T10:00:00.000Z"),
+                status: "active",
+                progress: 0
             }
         ]);
 

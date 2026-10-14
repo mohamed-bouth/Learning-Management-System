@@ -37,6 +37,13 @@ function errorHandler(error, req, res, next) {
         });
     }
 
+    if (error.status === 409){
+        return res.status(409).json({
+            success: false,
+            message: error.message,
+        });
+    }
+
     res.status(error.status || 500).json({
         success: false,
         message: error.message || "Internal server error",

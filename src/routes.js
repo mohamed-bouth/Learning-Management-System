@@ -7,6 +7,7 @@ import moudulesRouter from "./features/modules/module.routes.js"
 import permissionsRouter  from "./features/permissions/permission.routes.js"
 import roleRouter from "./features/roles/role.routes.js"
 import resourcesRouter from "./features/resources/resource.routes.js"
+import enrollmentsRouter from "./features/enrollments/enrollment.routes.js"
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.use("/modules", moudulesRouter)
 router.use("/permissions", permissionsRouter);
 router.use("/roles",roleRouter)
 router.use("/resources", resourcesRouter)
+router.use("/enrollments", enrollmentsRouter)
 
 
 export default router;
