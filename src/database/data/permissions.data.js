@@ -64,6 +64,10 @@ const permissionsData = [
     name: "permissions:set",
     description: "Allows assigning or removing permissions from roles.",
   },
+  {
+    name: "permissions:get",
+    description: "Allows viewing permissions.",
+  },
 
   // Modules and resources
   {
