@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAll,
   getOne,
+  getAllForUser,
   getOneWithModules,
   create,
   update,
@@ -14,6 +15,7 @@ import authorize from "../../middleware/authorize.js"
 const router = express.Router();
 
 router.get("/", getAll);
+router.get("/all", authenticate, authorize("course:get"), getAllForUser);
 router.get("/:id", authenticate, authorize("course:get"), validateObjectId, getOne);
 router.get("/:id/modules", authenticate, authorize("course:modules"), validateObjectId, getOneWithModules);
 router.post("/", authenticate, authorize("course:create"), create);

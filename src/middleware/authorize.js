@@ -32,7 +32,10 @@ function authorize(permissionName) {
                 return next(error);
             }
 
-            req.user.permission = permissionAttached;
+            req.user = {
+                ...req.user,
+                permission: permissionAttached
+            };
 
             return next();
 
