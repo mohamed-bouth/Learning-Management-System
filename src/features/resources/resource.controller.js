@@ -76,7 +76,7 @@ async function update(req, res, next) {
 
 async function remove(req, res, next) {
 	try {
-		const resource = await deleteResource(req.params.id);
+		const resource = await deleteResource(req.params.id, req.user.userId);
 
 		if (!resource) {
 			return res.status(404).json({

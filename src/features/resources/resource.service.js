@@ -1,8 +1,10 @@
+import Course from "../courses/course.module.js"
 import Resource from "./resource.module.js";
 import Module from "../modules/module.module.js";
 import "../uploads/upload.module.js";
 import { removeUploadedFile, uploadFile } from "../uploads/upload.service.js";
 import env from "../../config/env.js";
+import isHeOwningThat from "../../utils/isHeOwningThat.js";
 
 async function getResources({ page, limit }) {
 	const skip = (page - 1) * limit;
@@ -27,61 +29,98 @@ function getResourceById(resourceId) {
 
 async function createResource(resourceData, file, userId) {
 
-    const upload = await uploadFile(file, "resource", resourceData.module, userId)
-
-	const module = await Module.findById(resourceData.module);
+	const module = await Module.findById(resourceData.module).populate("course");
 
 	if (!module) {
-		const error = new Error("Module not found");
+		const error = new Error("Module not found!");
 		error.status = 404;
 		throw error;
 	}
 
-    if(upload) {
-        resourceData.upload = upload._id
-        resourceData.url = `${env.r2PublicUrl}/${upload.key}`
+    const result = await isHeOwningThat(userId , module.course._id , Course, "user")
+
+    if(!result.success){
+        throw result.error
     }
 
-	const resource = await Resource.create(resourceData)
+	let resource = await Resource.create(resourceData)
 
-    await resource.populate("upload");
+    if(file){
+
+        const upload = await uploadFile(file, "resource", resource._id, userId)
+
+        resource.upload = upload._id
+        resource.url = `${env.r2PublicUrl}/${upload.key}`
+
+        await resource.save()
+        await resource.populate("upload");
+
+    }
 
     return resource
 }
 
 async function updateResource(resourceId, resourceData, file, userId) {
-	if (resourceData.module) {
-		const module = await Module.findById(resourceData.module);
 
-		if (!module) {
-			const error = new Error("Module not found");
-			error.status = 404;
-			throw error;
-		}
-	}
+    const module = await Module.findById(resourceData.module).populate("course");
 
-    const oldresource = await Resource.findById(resourceId).populate("upload")
-
-    if(oldresource.upload){
-        await removeUploadedFile(oldresource.upload.key)
+    if (!module) {
+        const error = new Error("Module not found!");
+        error.status = 404;
+        throw error;
     }
 
-    const upload = await uploadFile(file, "resource", resourceData.module, userId)
+    const result = await isHeOwningThat(userId , module.course._id , Course, "user")
 
-    if(upload) {
-        resourceData.upload = upload._id
-        resourceData.url = `${env.r2PublicUrl}/${upload.key}`
+    if(!result.success){
+        throw result.error
     }
-    
 
-    const newresource = await Resource.findByIdAndUpdate(resourceId,resourceData,{ new: true },).populate("module").populate("upload");
+    let resource = await Resource.findById(resourceId).populate("upload")
 
-	return newresource
+    if(!resource){
+        const error = new Error("Resource not found!");
+        error.status = 404;
+        throw error;
+    }
+
+    const oldupload = resource.upload
+
+    Object.assign(resource, resourceData);
+
+    if(file){
+        const upload = await uploadFile(file, "resource", resourceData.module, userId)
+
+        resource.upload = upload._id
+        resource.url = `${env.r2PublicUrl}/${upload.key}`
+
+    }
+
+    await resource.save()
+    resource = await Resource.findById(resource._id).populate("module").populate("upload");
+
+    if(file && oldupload){
+        await removeUploadedFile(oldupload.key)
+    }
+
+	return resource
 }
 
-async function deleteResource(resourceId) {
+async function deleteResource(resourceId, userId) {
 
-    const resource = await Resource.findById(resourceId).populate("upload")
+    const resource = await Resource.findById(resourceId).populate("upload").populate({path : "module", populate: { path: "course"} })
+
+    if(!resource){
+        const error = new Error("Resource not found!");
+        error.status = 404;
+        throw error;
+    }
+
+    const result = await isHeOwningThat(userId , resource.module.course._id , Course, "user")
+
+    if(!result.success){
+        throw result.error
+    }
 
     if(resource.upload){
         await removeUploadedFile(resource.upload.key)
