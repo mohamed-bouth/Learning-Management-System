@@ -27,8 +27,11 @@ async function seed() {
         createdPermissions.forEach(p => permMap[p.name] = p._id);
 
         const formattedRoles = rolesData.map(role => ({
-        name: role.name,
-        permissions: role.permissions.map(pName => permMap[pName])
+            name: role.name,
+            permissions: role.permissions.map(({ name, scope }) => ({
+                permission: permMap[name],
+                scope,
+            }))
         }));
 
         const roles = await Role.insertMany(formattedRoles);
