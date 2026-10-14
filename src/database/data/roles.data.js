@@ -17,6 +17,7 @@ const rolesData = [
       'role:update',
       'role:delete',
       'permissions:set',
+      'permissions:get',
       'module:read',
       'module:create',
       'module:update',
