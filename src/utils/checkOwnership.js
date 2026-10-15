@@ -2,7 +2,11 @@ import Enrollment from "../features/enrollments/enrollment.module.js"
 import isHeOwningThat from "./isHeOwningThat.js";
 
 async function isHeEnrolletOn(userId , courseId){
-    const existingEnrollment = await Enrollment.findOne({learner: userId, course: courseId});
+    const existingEnrollment = await Enrollment.findOne({
+        learner: userId,
+        course: courseId,
+        status: { $in: ["active", "completed"] },
+    });
 
     if(existingEnrollment){
         return true
@@ -13,22 +17,20 @@ async function isHeEnrolletOn(userId , courseId){
 
 async function hasAccess(ownership, scope , courseId = false){
 
-    let hasAccess = false
+    let hasAccess = scope === "all"
 
-    if(courseId){
-        if(await isHeEnrolletOn(ownership.userId, ownership.courseId)){
+    if(!hasAccess && courseId && scope === "published"){
+        if(await isHeEnrolletOn(ownership.userId, courseId)){
             hasAccess = true
         }
     }
 
-    const result = await isHeOwningThat(ownership.userId, ownership.thingId, ownership.Model, ownership.field)
+    if(!hasAccess){
+        const result = await isHeOwningThat(ownership.userId, ownership.thingId, ownership.Model, ownership.field)
 
-    if(result.success){
-        hasAccess = true
-    }
-
-    if(scope === "all"){
-        hasAccess = true
+        if(result.success){
+            hasAccess = true
+        }
     }
 
     if(!hasAccess){
