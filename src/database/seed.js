@@ -98,14 +98,14 @@ async function seed() {
                 title: "Functions",
                 description: "Learn how to create and use functions.",
                 order: 2,
-                estimatedDuration: 90
+                estimatedDuration: 30
             },
             {
                 course: courses[1]._id,
                 title: "Introduction to Express",
                 description: "Learn the basics of Express.js.",
                 order: 1,
-                estimatedDuration: 75
+                estimatedDuration: 0
             }
         ]);
 
@@ -115,7 +115,7 @@ async function seed() {
                 title: "JavaScript Variables",
                 description: "Introduction to variables in JavaScript.",
                 type: "article",
-                estimatedDuration: "15 minutes",
+                estimatedDuration: 30,
                 displayOrder: 1
             },
             {
@@ -123,7 +123,7 @@ async function seed() {
                 title: "Data Types Video",
                 description: "Video explaining JavaScript data types.",
                 type: "video",
-                estimatedDuration: "20 minutes",
+                estimatedDuration: 30,
                 displayOrder: 2
             },
             {
@@ -131,7 +131,7 @@ async function seed() {
                 title: "Functions Exercise",
                 description: "Practice JavaScript functions.",
                 type: "exercise",
-                estimatedDuration: "30 minutes",
+                estimatedDuration: 30,
                 displayOrder: 1
             }
         ]);

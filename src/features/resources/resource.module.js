@@ -33,7 +33,7 @@ const resourceSchema = mongoose.Schema({
         required: false,
     },
     estimatedDuration: {
-        type: String,
+        type: Number,
         required: true,
         min: 0
     },

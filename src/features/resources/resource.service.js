@@ -5,6 +5,7 @@ import "../uploads/upload.module.js";
 import { removeUploadedFile, uploadFile } from "../uploads/upload.service.js";
 import env from "../../config/env.js";
 import { authorizeTarget, getAccessibleFilter } from "../../utils/accessControl.js";
+import filterCourseSchema from "../../utils/filterCourseValidation.js";
 
 async function getResources({ page, limit }, user) {
 	const skip = (page - 1) * limit;
@@ -31,7 +32,10 @@ async function getResourceById(resourceId, user) {
 
 async function createResource(resourceData, file, user) {
 
-    const module = await Module.findById(resourceData.module).select("course");
+    const module = await Module.findById(resourceData.module).select("estimatedDuration course");
+    const course = await Course.findById(module.course)
+
+    console.log(module)
 
 	if (!module) {
 		const error = new Error("Module not found!");
@@ -42,6 +46,11 @@ async function createResource(resourceData, file, user) {
     await authorizeTarget({ Model: Module, id: module._id, user, mode: "manage" });
 
 	let resource = await Resource.create(resourceData)
+
+    module.estimatedDuration = Number(module.estimatedDuration) +  Number(resource.estimatedDuration)
+    course.estimatedDuration = Number(course.estimatedDuration) +  Number(resource.estimatedDuration)
+    await module.save()
+    await course.save()
 
     if(file){
 
@@ -63,6 +72,8 @@ async function updateResource(resourceId, resourceData, file, user) {
     await authorizeTarget({ Model: Resource, id: resourceId, user, mode: "manage" });
 
     let resource = await Resource.findById(resourceId).populate("upload")
+
+    const oldEstimatedDuration = Number(resource.estimatedDuration)
 
     if(!resource){
         const error = new Error("Resource not found!");
@@ -87,11 +98,21 @@ async function updateResource(resourceId, resourceData, file, user) {
     }
 
     await resource.save()
-    resource = await Resource.findById(resource._id).populate("module").populate("upload");
+    resource = await Resource.findById(resource._id).populate({path : "module", populate: { path: "course" }}).populate("upload");
+
+    const course = await Course.findById(resource.module.course)
+    const module = await Module.findById(resource.module)
+
+    const newEstimatedDuration = Number(resource.estimatedDuration)
 
     if(file && oldupload){
         await removeUploadedFile(oldupload.key)
     }
+
+    module.estimatedDuration = Number(module.estimatedDuration) + (newEstimatedDuration - oldEstimatedDuration)
+    course.estimatedDuration = Number(course.estimatedDuration) + (newEstimatedDuration - oldEstimatedDuration)
+    await module.save()
+    await course.save()
 
 	return resource
 }
@@ -100,7 +121,15 @@ async function deleteResource(resourceId, user) {
 
     await authorizeTarget({ Model: Resource, id: resourceId, user, mode: "manage" });
 
-    const resource = await Resource.findById(resourceId).populate("upload")
+    const resource = await Resource.findById(resourceId).populate("upload").populate({path : "module", populate: { path: "course" }})
+
+    console.log(resource)
+
+    const course = await Course.findById(resource.module.course)
+    const module = await Module.findById(resource.module)
+
+    module.estimatedDuration = Number(module.estimatedDuration) - Number(resource.estimatedDuration)
+    course.estimatedDuration = Number(course.estimatedDuration) - Number(resource.estimatedDuration)
 
     if(!resource){
         const error = new Error("Resource not found!");
