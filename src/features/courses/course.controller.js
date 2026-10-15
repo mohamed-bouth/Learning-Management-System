@@ -8,6 +8,7 @@ import {
 } from "./course.service.js";
 import paginationSchema from "../../utils/paginationValidation.js";
 import filterCourseSchema from "../../utils/filterCourseValidation.js";
+import { createCourseSchema, updateCourseSchema } from "./course.validation.js";
 
 async function getAll(req, res, next) {
 	try {
@@ -20,7 +21,7 @@ async function getAll(req, res, next) {
 		const filter = filterCourseSchema.safeParse({ category, level, title, sortBy, order })
 
 		if (!pagination.success) {
-			return next(result.error)
+			return next(pagination.error)
 		}
 
 		if (!filter.success) {
@@ -52,7 +53,7 @@ async function getAllForUser(req, res, next) {
 		const filter = filterCourseSchema.safeParse({ category, level, title, sortBy, order })
 
 		if (!pagination.success) {
-			return next(result.error)
+			return next(pagination.error)
 		}
 
 		if (!filter.success) {
@@ -120,7 +121,13 @@ async function getOneWithModules(req, res, next) {
 
 async function create(req, res, next) {
 	try {
-		const course = await createCourse(req.body, req.user.userId);
+		const validation = createCourseSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+		const course = await createCourse(validation.data, req.user.userId);
 
 		res.status(201).json({
 			success: true,
@@ -135,7 +142,13 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
 	try {
-		const course = await updateCourse(req.params.id, req.body, req.user);
+		const validation = updateCourseSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+		const course = await updateCourse(req.params.id, validation.data, req.user);
 
 		if (!course) {
 			return res.status(404).json({

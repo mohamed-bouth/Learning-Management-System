@@ -141,9 +141,9 @@ async function deleteEnrollment(enrollmentId, user) {
 		mode: "manage",
 	});
 
-	await Enrollment.findByIdAndDelete(enrollmentId);
+	const enrollment = await Enrollment.findByIdAndDelete(enrollmentId);
 
-    return
+    return enrollment
 }
 
 export { getEnrollments, getEnrollmentById, createEnrollment, updateEnrollment, deleteEnrollment };
