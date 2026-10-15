@@ -1,5 +1,6 @@
 import {getModulesService, getModuleByIdService, getModulesByCourseService, createModuleService, updateModuleService, reorderModulesService, deleteModuleService} from "./module.service.js"
 import paginationSchema from "../../utils/paginationValidation.js";
+import { createModuleSchema, updateModuleSchema, reorderModulesSchema } from "./module.validation.js";
 
 async function getModules(req, res, next) {
 	try{
@@ -8,7 +9,7 @@ async function getModules(req, res, next) {
 		const pagination = paginationSchema.safeParse({ page, limit });
 
 		if (!pagination.success) {
-			return next(result.error)
+			return next(pagination.error)
 		}
 
 		const { modules, meta } = await getModulesService(pagination.data, req.user)
@@ -66,7 +67,13 @@ async function getModulesByCourse(req, res, next) {
 
 async function createModule(req, res, next){
 	try{
-		const module = await createModuleService(req.body, req.user);
+		const validation = createModuleSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+		const module = await createModuleService(validation.data, req.user);
 		return res.status(201).json({
             success: true,
             message: "Module created with seccess!",
@@ -80,7 +87,13 @@ async function createModule(req, res, next){
 async function updateModule(req, res, next) {
 	try{
 		const id = req.params.id;
-        const updateData = req.body;
+		const validation = updateModuleSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+        const updateData = validation.data;
 		const updatedModule =  await updateModuleService(id,updateData, req.user);
 		return res.status(200).json({
             success: true,
@@ -96,13 +109,13 @@ async function reorderModules(req, res, next) {
     try {
         const { modules } = req.body;
 
-        if (!modules || !Array.isArray(modules)) {
-            const error = new Error("Modules not valid!");
-            error.statusCode = 400;
-            return next(error);
+		const validation = reorderModulesSchema.safeParse({ modules });
+
+		if (!validation.success) {
+			return next(validation.error);
         }
 
-		await reorderModulesService(modules, req.user);
+		await reorderModulesService(validation.data.modules, req.user);
 
         return res.status(200).json({
             success: true,

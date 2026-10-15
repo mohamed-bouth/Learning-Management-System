@@ -8,6 +8,7 @@ import {
 } from "./category.service.js";
 
 import paginationSchema from "../../utils/paginationValidation.js";
+import { createCategorySchema, updateCategorySchema } from "./category.validation.js";
 
 async function getAll(req, res, next) {
     try {
@@ -59,7 +60,13 @@ async function getOne(req, res, next) {
 
 async function create(req, res, next) {
     try {
-        const category = await createCategory(req.body);
+        const validation = createCategorySchema.safeParse(req.body);
+
+        if (!validation.success) {
+            return next(validation.error);
+        }
+
+        const category = await createCategory(validation.data);
 
         res.status(201).json({
             success: true,
@@ -74,7 +81,13 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        const category = await updateCategory(req.params.id, req.body);
+        const validation = updateCategorySchema.safeParse(req.body);
+
+        if (!validation.success) {
+            return next(validation.error);
+        }
+
+        const category = await updateCategory(req.params.id, validation.data);
 
         if (!category) {
             return res.status(404).json({

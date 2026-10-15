@@ -1,5 +1,6 @@
 import { getResources, getResourceById, createResource, updateResource, deleteResource } from "./resource.service.js";
 import paginationSchema from "../../utils/paginationValidation.js";
+import { createResourceSchema, updateResourceSchema } from "./resource.validation.js";
 
 async function getAll(req, res, next) {
 	try {
@@ -43,7 +44,13 @@ async function getOne(req, res, next) {
 
 async function create(req, res, next) {
 	try {
-		const resource = await createResource(req.body, req.file, req.user);
+		const validation = createResourceSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+		const resource = await createResource(validation.data, req.file, req.user);
 
 		return res.status(201).json({
 			success: true,
@@ -56,7 +63,13 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
 	try {
-		const resource = await updateResource(req.params.id, req.body, req.file , req.user);
+		const validation = updateResourceSchema.safeParse(req.body);
+
+		if (!validation.success) {
+			return next(validation.error);
+		}
+
+		const resource = await updateResource(req.params.id, validation.data, req.file , req.user);
 
 		if (!resource) {
 			return res.status(404).json({
@@ -76,7 +89,7 @@ async function update(req, res, next) {
 
 async function remove(req, res, next) {
 	try {
-		const resource = await deleteResource(req.params.id, req.user);
+		await deleteResource(req.params.id, req.user);
 
 		if (!resource) {
 			return res.status(404).json({
