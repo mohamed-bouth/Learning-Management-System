@@ -8,7 +8,6 @@ import {
 } from "./course.service.js";
 import paginationSchema from "../../utils/paginationValidation.js";
 import filterCourseSchema from "../../utils/filterCourseValidation.js";
-import moduleModule from "../modules/module.module.js";
 
 async function getAll(req, res, next) {
 	try {
@@ -76,7 +75,7 @@ async function getAllForUser(req, res, next) {
 
 async function getOne(req, res, next) {
 	try {
-		const course = await getCourseById(req.params.id);
+		const course = await getCourseById(req.params.id, [], req.user);
 
 		if (!course) {
 			return res.status(404).json({

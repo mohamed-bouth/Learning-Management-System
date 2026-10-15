@@ -1,7 +1,7 @@
 import Enrollment from "./enrollment.module.js";
 import User from "../users/user.module.js";
 import Course from "../courses/course.module.js";
-import isHeOwningThat from "../../utils/isHeOwningThat.js";
+import { authorizeTarget } from "../../utils/accessControl.js";
 
 async function ensureNotAlreadyEnrolled(learner, course, excludedId = null) {
 	const filter = { learner, course };
@@ -104,7 +104,7 @@ async function createEnrollment({course}, userId) {
 	return Enrollment.create(data);
 }
 
-async function updateEnrollment(enrollmentId, enrollmentData, userId) {
+async function updateEnrollment(enrollmentId, enrollmentData, user) {
 
 	const currentEnrollment = await Enrollment.findById(enrollmentId).populate('course');
 
@@ -112,11 +112,12 @@ async function updateEnrollment(enrollmentId, enrollmentData, userId) {
 		return null;
 	}
 
-    const result = await isHeOwningThat(userId, currentEnrollment.course._id, Course, "user")
-
-    if(!result.success){
-        throw result.error
-    }
+	await authorizeTarget({
+		Model: Course,
+		id: currentEnrollment.course._id,
+		user,
+		mode: "manage",
+	});
 
 	return Enrollment.findByIdAndUpdate(
 		enrollmentId,
@@ -125,7 +126,7 @@ async function updateEnrollment(enrollmentId, enrollmentData, userId) {
 	).populate("learner", "name email").populate("course");
 }
 
-async function deleteEnrollment(enrollmentId, userId) {
+async function deleteEnrollment(enrollmentId, user) {
 
     const currentEnrollment = await Enrollment.findById(enrollmentId).populate('course');
 
@@ -133,11 +134,12 @@ async function deleteEnrollment(enrollmentId, userId) {
 		return null;
 	}
 
-    const result = await isHeOwningThat(userId, currentEnrollment.course._id, Course, "user")
-
-    if(!result.success){
-        throw result.error
-    }
+	await authorizeTarget({
+		Model: Course,
+		id: currentEnrollment.course._id,
+		user,
+		mode: "manage",
+	});
 
 	await Enrollment.findByIdAndDelete(enrollmentId);
 

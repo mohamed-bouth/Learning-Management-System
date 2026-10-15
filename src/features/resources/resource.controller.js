@@ -9,7 +9,7 @@ async function getAll(req, res, next) {
 			return next(pagination.error);
 		}
 
-		const { resources, meta } = await getResources(pagination.data);
+		const { resources, meta } = await getResources(pagination.data, req.user);
 
 		return res.status(200).json({
 			success: true,
@@ -23,7 +23,7 @@ async function getAll(req, res, next) {
 
 async function getOne(req, res, next) {
 	try {
-		const resource = await getResourceById(req.params.id);
+		const resource = await getResourceById(req.params.id, req.user);
 
 		if (!resource) {
 			return res.status(404).json({
@@ -43,7 +43,7 @@ async function getOne(req, res, next) {
 
 async function create(req, res, next) {
 	try {
-		const resource = await createResource(req.body, req.file, req.user.userId);
+		const resource = await createResource(req.body, req.file, req.user);
 
 		return res.status(201).json({
 			success: true,
@@ -56,7 +56,7 @@ async function create(req, res, next) {
 
 async function update(req, res, next) {
 	try {
-		const resource = await updateResource(req.params.id, req.body, req.file , req.user.userId);
+		const resource = await updateResource(req.params.id, req.body, req.file , req.user);
 
 		if (!resource) {
 			return res.status(404).json({
@@ -76,7 +76,7 @@ async function update(req, res, next) {
 
 async function remove(req, res, next) {
 	try {
-		const resource = await deleteResource(req.params.id, req.user.userId);
+		const resource = await deleteResource(req.params.id, req.user);
 
 		if (!resource) {
 			return res.status(404).json({
