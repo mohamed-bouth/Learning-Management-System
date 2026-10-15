@@ -1,14 +1,12 @@
 import Course from "./course.module.js";
 import Module from "../modules/module.module.js"
 import Category from "../categories/category.module.js"
-import { hasAccess } from "../../utils/checkOwnership.js";
+import { authorizeTarget, getAccessibleCourseFilter } from "../../utils/accessControl.js";
 
 
 
 async function getCourses(metaData) {
     const { category , level , title , sortBy , order } = metaData
-
-    console.log(sortBy,order)
 
     const categoryAfterSearch = await Category.find({
         name: {
@@ -89,15 +87,7 @@ async function getCoursesForAuthUser(metaData, user) {
         return filterObj
     }, {})
 
-    const scope = user.permission.scope
-
-    console.log(scope)
-
-    if (scope === "published") {
-        filter.publicationStatus = "published";
-    } else if (scope === "own") {
-        filter.user = user.userId;
-    }
+    Object.assign(filter, await getAccessibleCourseFilter(user));
 
 
     const { page, limit } = metaData
@@ -119,17 +109,14 @@ async function getCoursesForAuthUser(metaData, user) {
 
 async function getCourseById(courseId, collections = [], user) {
 
-    if(collections.length > 0){
-
-        const ownership = {
-            userId: user.userId,
-            thingId: courseId,
+    if (user) {
+        await authorizeTarget({
             Model: Course,
-            field: "user"
-        }
-
-        await hasAccess(ownership, user.permission.scope, courseId)
-
+            id: courseId,
+            user,
+            mode: "read",
+            requireEnrollment: collections.length > 0,
+        });
     }
 
     let query = Course.findById(courseId)
@@ -149,15 +136,7 @@ function createCourse(courseData, userId) {
 }
 
 async function updateCourse(courseId, courseData, user) {
-    await hasAccess(
-        {
-            userId: user.userId,
-            thingId: courseId,
-            Model: Course,
-            field: "user",
-        },
-        user.permission.scope,
-    );
+    await authorizeTarget({ Model: Course, id: courseId, user, mode: "manage" });
 
 
     const course = await Course.findByIdAndUpdate(
@@ -170,15 +149,7 @@ async function updateCourse(courseId, courseData, user) {
 }
 
 async function deleteCourse(courseId, user) {
-    await hasAccess(
-        {
-            userId: user.userId,
-            thingId: courseId,
-            Model: Course,
-            field: "user",
-        },
-        user.permission.scope,
-    );
+    await authorizeTarget({ Model: Course, id: courseId, user, mode: "manage" });
 
     const course = await Course.findByIdAndDelete(courseId);
 

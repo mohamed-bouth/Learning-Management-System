@@ -11,7 +11,7 @@ async function getModules(req, res, next) {
 			return next(result.error)
 		}
 
-		const { modules, meta } = await getModulesService(pagination.data)
+		const { modules, meta } = await getModulesService(pagination.data, req.user)
 
 		return res.status(200).json({
             success: true,
@@ -29,7 +29,7 @@ async function getModules(req, res, next) {
 async function getOneWithResources(req, res, next) {
 	try {
 
-		const module = await getModuleByIdService(req.params.id);
+		const module = await getModuleByIdService(req.params.id, req.user);
 
 		if (!module) {
 			return res.status(404).json({
@@ -52,7 +52,7 @@ async function getOneWithResources(req, res, next) {
 async function getModulesByCourse(req, res, next) {
 	try{
 		const id = req.params.id
-		const modules = await getModulesByCourseService(id)
+		const modules = await getModulesByCourseService(id, req.user)
 		return res.status(200).json({
             success: true,
 			count: modules.length,
@@ -66,7 +66,7 @@ async function getModulesByCourse(req, res, next) {
 
 async function createModule(req, res, next){
 	try{
-		const module = await createModuleService(req.body);
+		const module = await createModuleService(req.body, req.user);
 		return res.status(201).json({
             success: true,
             message: "Module created with seccess!",
@@ -81,7 +81,7 @@ async function updateModule(req, res, next) {
 	try{
 		const id = req.params.id;
         const updateData = req.body;
-		const updatedModule =  await updateModuleService(id,updateData);
+		const updatedModule =  await updateModuleService(id,updateData, req.user);
 		return res.status(200).json({
             success: true,
             message: "Module updated with success!",
@@ -102,7 +102,7 @@ async function reorderModules(req, res, next) {
             return next(error);
         }
 
-        await reorderModulesService(modules);
+		await reorderModulesService(modules, req.user);
 
         return res.status(200).json({
             success: true,
@@ -118,7 +118,7 @@ async function deleteModule(req, res, next) {
 	try{
 		const id = req.params.id;
 
-		await deleteModuleService(id);
+		await deleteModuleService(id, req.user);
 
 		return res.status(200).send()
 

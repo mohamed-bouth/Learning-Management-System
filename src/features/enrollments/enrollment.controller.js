@@ -78,7 +78,7 @@ async function update(req, res, next) {
 			return next(validation.error);
 		}
 
-		const enrollment = await updateEnrollment(req.params.id, validation.data, req.user.userId);
+		const enrollment = await updateEnrollment(req.params.id, validation.data, req.user);
 
 		if (!enrollment) {
 			return res.status(404).json({
@@ -98,7 +98,7 @@ async function update(req, res, next) {
 
 async function remove(req, res, next) {
 	try {
-		const enrollment = await deleteEnrollment(req.params.id, req.user.userId);
+		const enrollment = await deleteEnrollment(req.params.id, req.user);
 
 		if (!enrollment) {
 			return res.status(404).json({
