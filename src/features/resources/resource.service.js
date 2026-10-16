@@ -296,4 +296,12 @@ async function deleteResource(resourceId, user) {
 	return Resource.findByIdAndDelete(resourceId);
 }
 
-export { getResources, getResourceById, createResource, updateResource, deleteResource };
+export {
+    getResources,
+    getResourceById,
+    createResource,
+    updateResource,
+    deleteResource,
+    isHaveAccessToThatModule,
+    isHaveAccessToThatResource,
+};

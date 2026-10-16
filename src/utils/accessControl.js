@@ -183,9 +183,9 @@ async function getAccessibleEnrollments(user) {
 }
 
 export {
+    authorizationError,
     authorizeTarget,
     getAccessibleCourseFilter,
     getAccessibleFilter,
-    getAccessibleEnrollments,
-    authorizationError
+    getAccessibleEnrollments
 };
