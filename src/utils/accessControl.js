@@ -164,8 +164,27 @@ async function getAccessibleFilter(Model, user, options = {}) {
     throw new Error(`No access filter configured for ${Model.modelName}`);
 }
 
+async function getAccessibleEnrollments(user) {
+    const scope = user.permission.scope;
+
+    if (scope === "all") {
+        return await Course.distinct("_id");
+    }
+
+    if (scope === "own") {
+        return await Course.distinct("_id", {user: user.userId});
+    }
+
+    if (scope === "published") {
+        return await Enrollment.distinct("course", {learner: user.userId});
+    }
+
+    throw new Error("Invalid permission scope");
+}
+
 export {
     authorizeTarget,
     getAccessibleCourseFilter,
     getAccessibleFilter,
+    getAccessibleEnrollments,
 };

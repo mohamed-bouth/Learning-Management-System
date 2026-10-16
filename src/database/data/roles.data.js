@@ -65,7 +65,7 @@ const rolesData = [
       { name: 'module:read', scope: 'published' },
       { name: 'module:resources', scope: 'published' },
       { name: 'resource:read', scope: 'published' },
-      { name: 'enrollment:read', scope: 'own' },
+      { name: 'enrollment:read', scope: 'published' },
       { name: 'enrollment:create', scope: 'published' }
     ]
   }
