@@ -122,6 +122,10 @@ const permissionsData = [
     name: "enrollment:delete",
     description: "Allows deleting enrollments.",
   },
+  {
+    name: "progression:complete",
+    description: "Allows learners to complete their own resource progression.",
+  },
 ];
 
 export default permissionsData;

@@ -8,6 +8,7 @@ import permissionsRouter  from "./features/permissions/permission.routes.js"
 import roleRouter from "./features/roles/role.routes.js"
 import resourcesRouter from "./features/resources/resource.routes.js"
 import enrollmentsRouter from "./features/enrollments/enrollment.routes.js"
+import progressionsRouter from "./features/progressions/progress.routes.js"
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.use("/permissions", permissionsRouter);
 router.use("/roles",roleRouter)
 router.use("/resources", resourcesRouter)
 router.use("/enrollments", enrollmentsRouter)
+router.use("/progressions", progressionsRouter)
 
 
 export default router;
