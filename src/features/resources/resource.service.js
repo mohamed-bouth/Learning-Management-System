@@ -1,11 +1,125 @@
 import Course from "../courses/course.module.js"
 import Resource from "./resource.module.js";
 import Module from "../modules/module.module.js";
+import Progress from "../progressions/progress.module.js"
+import Enrollment from "../enrollments/enrollment.module.js"
 import "../uploads/upload.module.js";
 import { removeUploadedFile, uploadFile } from "../uploads/upload.service.js";
 import env from "../../config/env.js";
 import { authorizeTarget, getAccessibleFilter } from "../../utils/accessControl.js";
-import filterCourseSchema from "../../utils/filterCourseValidation.js";
+import { authorizationError } from "../../utils/accessControl.js";
+
+async function isHaveAccessToThatModule(module, userId) {
+
+    if (module.order === 1) {
+        return { success: true };
+    }
+
+    const populatedModule = await Module.findById(module._id).populate("course");
+
+    if (!populatedModule?.course) {
+        throw authorizationError();
+    }
+
+    const course = populatedModule.course;
+
+    const enrollment = await Enrollment.findOne({
+        learner: userId,
+        course: course._id,
+    })
+
+    if (!enrollment) {
+        throw authorizationError();
+    }
+
+    const previousModule = await Module.findOne({
+        course: module.course,
+        order: module.order - 1,
+    });
+
+    if (!previousModule) {
+        throw authorizationError();
+    }
+
+    const numberOfResources = await Resource.countDocuments({
+        module: previousModule._id,
+    });
+
+    const numberOfCompletedProgress = await Progress.countDocuments({
+        enrollment: enrollment._id,
+        module: previousModule._id,
+        status: "completed",
+    });
+
+    if ( numberOfResources === 0 || numberOfCompletedProgress !== numberOfResources){
+        throw authorizationError();
+    }
+
+    return { success: true };
+}
+
+async function isHaveAccessToThatResource(resource, userId) {
+
+    const populatedModule = await Module.findById(resource.module._id).populate("course");
+
+    if (!populatedModule?.course) {
+        throw authorizationError();
+    }
+
+    const course = populatedModule.course;
+
+    const enrollment = await Enrollment.findOne({
+        learner: userId,
+        course: course._id,
+    })
+
+    if (!enrollment) {
+        throw authorizationError();
+    }
+
+    const existingProgress = await Progress.findOne({
+        enrollment: enrollment._id,
+        resource: resource._id,
+    });
+
+    if (existingProgress) {
+        return {
+            success: true,
+            action: "read",
+        };
+    }
+
+    if (resource.displayOrder === 1) {
+        return {
+            success: true,
+            action: "create",
+        };
+    }
+
+    const previousResource = await Resource.findOne({
+        module: resource.module._id ?? resource.module,
+        displayOrder: resource.displayOrder - 1,
+    });
+
+    if (!previousResource) {
+        throw authorizationError();
+    }
+
+    const previousProgress = await Progress.findOne({
+        enrollment: enrollment._id,
+        resource: previousResource._id,
+        status: "completed",
+    });
+
+    if (!previousProgress) {
+        throw authorizationError();
+    }
+
+    return {
+        success: true,
+        action: "create",
+    };
+}
 
 async function getResources({ page, limit }, user) {
 	const skip = (page - 1) * limit;
@@ -25,9 +139,47 @@ async function getResources({ page, limit }, user) {
 	};
 }
 
-async function getResourceById(resourceId, user) {
+async function getResourceById(resourceId, user)
+ {
     await authorizeTarget({ Model: Resource, id: resourceId, user, mode: "read" });
-    return Resource.findById(resourceId).populate("module").populate("upload");
+
+    const resource = await Resource.findById(resourceId).populate({path: "module", populate: {path: "course"}}).populate("upload");
+
+    if(user.permission.scope === "all" || user.permission.scope === "own"){
+        return resource
+    }
+
+    await isHaveAccessToThatModule(resource.module, user.userId)
+
+    const result = await isHaveAccessToThatResource(resource, user.userId)
+
+    if(result.success && result.action === "read"){
+        return resource
+    }
+
+    if(result.success && result.action === "create"){
+        const enrollment = await Enrollment.findOne({
+        learner: user.userId,
+        course: resource.module.course._id,
+    })
+        const progress = await Progress.create({
+            enrollment,
+            learner: user.userId,
+            module: resource.module._id,
+            resource: resource._id,
+            status: "inProgress", 
+        })
+
+        if(!progress){
+            const error = new Error()
+            error.status = 500
+            throw error
+        }
+
+        return resource
+    }
+
+
 }
 
 async function createResource(resourceData, file, user) {
