@@ -1,23 +1,21 @@
-import argon2 from "argon2"
+
+import bcrypt from "bcryptjs";
 
 async function hashPassword(password) {
+    const saltRounds = 12;
 
-    const passwordHash = await argon2.hash(password, {
-        type: argon2.argon2id
-    })
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    return passwordHash
+    return passwordHash;
 }
 
 async function verifyPassword(passwordHash, password) {
+    const result = await bcrypt.compare(password, passwordHash);
 
-    const result = await argon2.verify(passwordHash, password)
-
-    return result
+    return result;
 }
 
 function removePasswordHashFromUserObj(user) {
-
     user = [user].map(user => ({
         _id: user._id,
         name: user.name,
@@ -26,11 +24,15 @@ function removePasswordHashFromUserObj(user) {
         role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-    }))
+    }));
 
-    user = user[0]
+    user = user[0];
 
-    return user
+    return user;
 }
 
-export { hashPassword, verifyPassword, removePasswordHashFromUserObj }
+export {
+    hashPassword,
+    verifyPassword,
+    removePasswordHashFromUserObj
+};

@@ -23,7 +23,7 @@
   "homepage": "https://github.com/mohamed-bouth/Learning-Management-System#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1149.0",
-    "argon2": "^0.45.1",
+    "bcryptjs": "^3.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
