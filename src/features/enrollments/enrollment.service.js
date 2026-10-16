@@ -1,7 +1,7 @@
 import Enrollment from "./enrollment.module.js";
 import User from "../users/user.module.js";
 import Course from "../courses/course.module.js";
-import { authorizeTarget } from "../../utils/accessControl.js";
+import { authorizeTarget, getAccessibleEnrollments } from "../../utils/accessControl.js";
 
 async function ensureNotAlreadyEnrolled(learner, course, excludedId = null) {
 	const filter = { learner, course };
@@ -37,7 +37,7 @@ async function ensureReferencesExist(learner, course ) {
 	}
 }
 
-async function getEnrollments(body) {
+async function getEnrollments(body, user) {
 
     const { page, limit, userId, course, status } = body
 
@@ -55,10 +55,27 @@ async function getEnrollments(body) {
             }
         }).select("_id");
 
-        filter.course = {
-            $in: courses.map(course => course._id)
-        };
+        filter.course = courses.map(course => course._id)
 	}
+
+	const CourseIds = await getAccessibleEnrollments(user)
+
+	if(filter.course){
+			const matchedCoursesIds =  CourseIds.reduce((matched , courseIdfromBase) => {
+				filter.course.forEach(coursefromsearch => {
+					if(coursefromsearch.toString() === courseIdfromBase.toString()){
+						return matched.push(courseIdfromBase)
+					}
+				});
+				return matched
+			},[])
+
+			filter.course = { $in: matchedCoursesIds };
+	}else{
+		filter.course = {$in: CourseIds}
+	}
+
+	console.log(filter.course)
 
 	if (status) {
 		filter.status = status;
@@ -66,9 +83,13 @@ async function getEnrollments(body) {
 
 	const skip = (page - 1) * limit;
 
-	const enrollments = await Enrollment.find(filter).populate("learner", "name email").populate("course").skip(skip).limit(limit).sort({ enrolledAt: -1 })
+	let enrollments = await Enrollment.find(filter).populate("learner", "_id name email").populate("course").skip(skip).limit(limit).sort({ enrolledAt: -1 })
 
-    const total = await Enrollment.countDocuments(filter)
+	if(user.permission.scope === "published"){
+		enrollments = enrollments.filter(enrollemnt => enrollemnt.learner._id.toString() === user.userId.toString())
+	}
+
+    const total = enrollments.length
 
 	return {
 		enrollments,
@@ -81,7 +102,20 @@ async function getEnrollments(body) {
 	};
 }
 
-async function getEnrollmentById(enrollmentId) {
+async function getEnrollmentById(enrollmentId, user) {
+
+	const currentEnrollment = await Enrollment.findById(enrollmentId).populate('course');
+
+	if (!currentEnrollment) {
+		return null;
+	}
+
+	await authorizeTarget({
+		Model: Course,
+		id: currentEnrollment.course._id,
+		user,
+		mode: "read",
+	});
 
 	const enrollment = await Enrollment.findById(enrollmentId).populate("learner", "name email").populate("course");
 

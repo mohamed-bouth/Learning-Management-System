@@ -18,7 +18,7 @@ async function getAll(req, res, next) {
 		const { enrollments, meta } = await getEnrollments({
 			...pagination.data,
 			...filters.data,
-		});
+		}, req.user);
 
 		return res.status(200).json({
 			success: true,
@@ -32,7 +32,7 @@ async function getAll(req, res, next) {
 
 async function getOne(req, res, next) {
 	try {
-		const enrollment = await getEnrollmentById(req.params.id);
+		const enrollment = await getEnrollmentById(req.params.id, req.user);
 
 		if (!enrollment) {
 			return res.status(404).json({
