@@ -187,4 +187,5 @@ export {
     getAccessibleCourseFilter,
     getAccessibleFilter,
     getAccessibleEnrollments,
+    authorizationError
 };
