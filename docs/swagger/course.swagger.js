@@ -83,11 +83,31 @@
 
  /**
  * @swagger
+ * /api/courses/all:
+ *   get:
+ *     summary: Get all courses available to the authenticated user
+ *     tags:
+ *       - Courses
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Courses retrieved successfully
+ *       401:
+ *         description: Authentication required
+ *       500:
+ *         description: Internal server error
+ */
+
+ /**
+ * @swagger
  * /api/courses/{id}:
  *   get:
  *     summary: Get a course by ID
  *     tags:
  *       - Courses
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -112,6 +132,8 @@
  *     summary: Create a new course
  *     tags:
  *       - Courses
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -177,6 +199,8 @@
  *     summary: Update a course
  *     tags:
  *       - Courses
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -244,6 +268,8 @@
  *     summary: Delete a course
  *     tags:
  *       - Courses
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -268,6 +294,8 @@
  *     summary: Get all modules of a course
  *     tags:
  *       - Courses
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: courseId
