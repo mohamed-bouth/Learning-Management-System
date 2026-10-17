@@ -1,5 +1,5 @@
 function errorHandler(error, req, res, next) {
-
+    console.error(error)
     if(error.status === 404){
         return res.status(404).json({
             success: false,

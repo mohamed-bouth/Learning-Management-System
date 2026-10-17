@@ -2,6 +2,7 @@ import Course from "../features/courses/course.module.js";
 import Module from "../features/modules/module.module.js";
 import Resource from "../features/resources/resource.module.js";
 import Enrollment from "../features/enrollments/enrollment.module.js";
+import Progress from "../features/progressions/progress.module.js";
 
 const activeEnrollmentStatuses = ["active", "completed"];
 
@@ -158,7 +159,23 @@ async function getAccessibleFilter(Model, user, options = {}) {
 
     if (Model === Resource) {
         const moduleIds = await Module.find({ course: { $in: courseIds } }).distinct("_id");
-        return { module: { $in: moduleIds } };
+
+        let filter = { module: { $in: moduleIds }}
+
+        if(user.permission.scope === "published"){
+            const enrollments = await Enrollment.find({
+                learner: user.userId,
+                course: { $in: courseIds }
+            }).distinct("_id");
+
+            const resourceIds = await Progress.distinct("resource", {
+                enrollment: { $in: enrollments }
+            });
+
+            filter['_id'] = { $in: resourceIds }
+        }
+
+        return filter
     }
 
     throw new Error(`No access filter configured for ${Model.modelName}`);
