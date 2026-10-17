@@ -1,5 +1,11 @@
 function errorHandler(error, req, res, next) {
-    console.error(error);
+
+    if(error.status === 404){
+        return res.status(404).json({
+            success: false,
+            message: error.message,
+        });
+    }
 
     if (error.name === "AuthenticationError" || error.status === 401){
         return res.status(401).json({

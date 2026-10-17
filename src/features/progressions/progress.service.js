@@ -2,27 +2,21 @@ import Progress from "./progress.module.js";
 import Enrollment from "../enrollments/enrollment.module.js";
 import Module from "../modules/module.module.js";
 import Resource from "../resources/resource.module.js";
+import { authorizationError, notFoundError } from "../../utils/accessControl.js";
 import { isHaveAccessToThatModule, isHaveAccessToThatResource } from "../resources/resource.service.js";
-import { authorizationError } from "../../utils/accessControl.js";
-
-function notFoundError() {
-	const error = new Error("Progression not found");
-	error.status = 404;
-	return error;
-}
 
 async function updateEnrollmentProgress(enrollment) {
 	const modules = await Module.find({ course: enrollment.course }).select("_id");
 	const moduleIds = modules.map((module) => module._id);
 
-	const [numberOfResources, numberOfCompletedProgressions] = await Promise.all([
-		Resource.countDocuments({ module: { $in: moduleIds } }),
-		Progress.countDocuments({ enrollment: enrollment._id, status: "completed" }),
-	]);
+	const numberOfResources = await Resource.countDocuments({ module: { $in: moduleIds } })
+	const numberOfCompletedProgressions = await Progress.countDocuments({ enrollment: enrollment._id, status: "completed" })
 
-	const progress = numberOfResources === 0
-		? 0
-		: Math.min(100, (numberOfCompletedProgressions / numberOfResources) * 100);
+	let progress = 0
+
+	if(numberOfResources > 0){
+		progress = Math.min(100, (numberOfCompletedProgressions / numberOfResources) * 100);
+	}
 
 	return Enrollment.findByIdAndUpdate(
 		enrollment._id,
@@ -33,41 +27,28 @@ async function updateEnrollmentProgress(enrollment) {
 
 async function completeResourceProgression(resourceId, user) {
 
-    const currentResource = await Resource.findById(resourceId)
-    .populate({
-        path: "module",
-        select: "course",
-        populate: {
-            path: "course",
-            select: "_id"
-        }
-    });
+    const currentResource = await Resource.findById(resourceId).populate({path: "module", select: "course", populate: {path: "course", select: "_id"}});
 
     if (!currentResource?.module?.course) {
         throw authorizationError();
     }
 
-    const currentCourseId = currentResource.module.course._id;
+    const courseId = currentResource.module.course._id;
 
-    const currentEnrollment = await Enrollment.findOne({
+    const enrollment = await Enrollment.findOne({
         learner: user.userId,
-        course: currentCourseId,
+        course: courseId,
         status: "active"
     });
 
-    if (!currentEnrollment) {
+    if (!enrollment) {
         throw authorizationError();
     }
 
 	const progression = await Progress.findOne({
-        enrollment: currentEnrollment._id,
+        enrollment: enrollment._id,
         resource: resourceId,
-        status: "inProgress"
     })
-		.populate({
-			path: "enrollment",
-			select: "learner course status",
-		})
 		.populate({
 			path: "module",
 			select: "course order",
@@ -78,24 +59,17 @@ async function completeResourceProgression(resourceId, user) {
 		});
 
 	if (!progression) {
-		throw notFoundError();
+		throw notFoundError('progress');
 	}
 
-	const enrollment = progression.enrollment;
 	const module = progression.module;
 	const resource = progression.resource;
 
-	if (
-		!enrollment ||
-		enrollment.learner.toString() !== user.userId.toString()
-	) {
+	if (!enrollment || enrollment.learner.toString() !== user.userId.toString()) {
 		throw authorizationError();
 	}
 
-	if (
-		enrollment.status === "cancelled" ||
-		module?.course?.toString() !== enrollment.course.toString() ||
-		resource?.module?.toString() !== module._id.toString()
+	if (enrollment.status === "cancelled" || module?.course?.toString() !== enrollment.course.toString() || resource?.module?.toString() !== module._id.toString()
 	) {
 		throw authorizationError();
 	}
@@ -108,8 +82,8 @@ async function completeResourceProgression(resourceId, user) {
 		throw authorizationError("Only active enrollments can be progressed");
 	}
 
-	await isHaveAccessToThatModule(module, user.userId);
-	await isHaveAccessToThatResource(resource, user.userId);
+	await isHaveAccessToThatModule(resourceId, user.userId);
+	await isHaveAccessToThatResource(resourceId, user.userId);
 
 	const completedAt = new Date();
 	const updatedProgression = await Progress.findOneAndUpdate(
@@ -129,7 +103,7 @@ async function completeResourceProgression(resourceId, user) {
 
 	await updateEnrollmentProgress(enrollment);
 
-	return updatedProgression || Progress.findById(progression._id);
+	return updatedProgression
 }
 
 export { completeResourceProgression };

@@ -187,5 +187,6 @@ export {
     authorizeTarget,
     getAccessibleCourseFilter,
     getAccessibleFilter,
-    getAccessibleEnrollments
+    getAccessibleEnrollments,
+    notFoundError
 };
