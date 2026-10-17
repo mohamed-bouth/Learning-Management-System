@@ -71,6 +71,13 @@ export async function loginService(body) {
         throw error
     }
 
+    if(user.status === "suspended"){
+        const error = new Error("Your Account is Suspended, Contact Support!")
+        error.status = 401
+        error.name = "AuthenticationError"
+        throw error
+    }
+
     user = removePasswordHashFromUserObj(user)
 
     const refreshTokenValue = generateRefreshToken()
