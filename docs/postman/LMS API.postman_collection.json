@@ -1,0 +1,1501 @@
+{
+  "info": {
+    "_postman_id": "5a63f840-557e-432f-b787-2c199058a8ad",
+    "name": "LMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53032275",
+    "_collection_link": "https://go.postman.co/collection/53032275-5a63f840-557e-432f-b787-2c199058a8ad?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"trainer\",\n    \"email\": \"trainer2@gmail.com\",\n    \"password\": \"Password123\",\n    \"passwordConfirmation\": \"Password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"learner@gmail.com\",\n    \"password\": \"Password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "profiles",
+      "item": [
+        {
+          "name": "get my profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/profiles/me",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "profiles",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update profile name",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"lhandouz\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/profiles/me/name",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "profiles",
+                "me",
+                "name"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update profile email",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"lhandouz@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update Account Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"lhandouz@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/profiles/me/email",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "profiles",
+                "me",
+                "email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update profile image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"lhandouz@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "item": [
+        {
+          "name": "get categories",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/categories?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "categories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get category by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/categories/6acfa476159e2495f95f911c",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "categories",
+                "6acfa476159e2495f95f911c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"launguage c\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/categories",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update category",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Language c\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/categories/6abf87b7d201dac53f995e2f",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "categories",
+                "6abf87b7d201dac53f995e2f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/categories/6abf87b7d201dac53f995e2f",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "categories",
+                "6abf87b7d201dac53f995e2f"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "courses",
+      "item": [
+        {
+          "name": "get courses",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses?page=1&limit=10&category=&title=&level=&sortBy=createdAt&order=asc",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "category",
+                  "value": ""
+                },
+                {
+                  "key": "title",
+                  "value": ""
+                },
+                {
+                  "key": "level",
+                  "value": ""
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "order",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get courses for users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses/all",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get courses by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses/6ad239e6cc58179b055fb3dd",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses",
+                "6ad239e6cc58179b055fb3dd"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get coures by id with module",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses/6ad239e6cc58179b055fb3dd/modules",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses",
+                "6ad239e6cc58179b055fb3dd",
+                "modules"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"6abf8931d201dac53f995e30\",\n  \"title\": \"Introduction to JavaScript\",\n  \"description\": \"Learn the fundamentals of JavaScript programming.\",\n  \"level\": \"easy\",\n  \"objective\": \"Understand variables, functions, arrays, objects, and basic JavaScript syntax.\",\n  \"estimatedDuration\": 120,\n  \"publicationStatus\": \"draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"level\": \"hard\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses/6ad0f7b64f0b2dbe240e7605",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses",
+                "6ad0f7b64f0b2dbe240e7605"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/courses/6ad0f7b64f0b2dbe240e7605",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "courses",
+                "6ad0f7b64f0b2dbe240e7605"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "modules",
+      "item": [
+        {
+          "name": "get modules",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules?page=1&limit=10",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get module by id with resources",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/6ad239e6cc58179b055fb3df/resources",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                "6ad239e6cc58179b055fb3df",
+                "resources"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get modules by course id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/course/6ad239e6cc58179b055fb3dd",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                "course",
+                "6ad239e6cc58179b055fb3dd"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create module",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"6acfa476159e2495f95f911e\",\n    \"title\": \"fetch on js\",\n    \"description\": \"the fendamental of fetch on javascript\",\n    \"estimatedDuration\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update module",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"fetch on JavaScript\",\n    \"description\": \"the fendamental of fetch on javascript\",\n    \"estimatedDuration\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/6ad103480ab3280abc319a47",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                "6ad103480ab3280abc319a47"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update modules order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"modules\": [\n        {\n            \"id\": \"6ace0ea7ce1573873c112845\",\n            \"order\": 3\n        },\n        {\n            \"id\": \"6ace0ea7ce1573873c112846\",\n            \"order\": 2\n        },\n        {\n            \"id\": \"6ace13085827d0abce70547e\",\n            \"order\": 1\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/reorder",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                "reorder"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete module",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/modules/6ad0f7db4f0b2dbe240e76d1",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "modules",
+                "6ad0f7db4f0b2dbe240e76d1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "resources",
+      "item": [
+        {
+          "name": "get resources",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/resources",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "resources"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get resource by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/resources/6ad239e6cc58179b055fb3e2",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "resources",
+                "6ad239e6cc58179b055fb3e2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "module",
+                  "value": "6ace6372127db5a6acab0239",
+                  "type": "text",
+                  "uuid": "81f6c021-7322-4b8a-9020-7be13f61fafe"
+                },
+                {
+                  "key": "title",
+                  "value": "Introduction to JavaScript Variables",
+                  "type": "text",
+                  "uuid": "774bcc42-ad66-49e2-975d-b4ffbd5be011"
+                },
+                {
+                  "key": "description",
+                  "value": "Learn how variables are declared and used in JavaScript.",
+                  "type": "text",
+                  "uuid": "14b90dc6-2ffe-4a37-b3e3-542acd71b666"
+                },
+                {
+                  "key": "type",
+                  "value": "pdf",
+                  "type": "text",
+                  "uuid": "ed8bd5aa-bdf4-4e02-9c97-d2e13b8255ee"
+                },
+                {
+                  "key": "url",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "2b07fac7-c08d-46ba-b782-518615309657"
+                },
+                {
+                  "key": "estimatedDuration",
+                  "value": "15",
+                  "type": "text",
+                  "uuid": "940e7017-4ae7-434e-927d-99d2eec62091"
+                },
+                {
+                  "key": "displayOrder",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "5968dcd6-5c60-4d97-ac9b-49b5aed4c6a1"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "ec237433-f0de-404a-be8d-654926e3cf50",
+                  "src": "/home/lhandouz/Downloads/mohamed bouthhandoust cv.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/resources/",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "resources",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "module",
+                  "value": "6ace6372127db5a6acab0239",
+                  "type": "text",
+                  "uuid": "81f6c021-7322-4b8a-9020-7be13f61fafe"
+                },
+                {
+                  "key": "title",
+                  "value": "Introduction to JavaScript Variables",
+                  "type": "text",
+                  "uuid": "774bcc42-ad66-49e2-975d-b4ffbd5be011"
+                },
+                {
+                  "key": "description",
+                  "value": "Learn how variables are declared and used in JavaScript.",
+                  "type": "text",
+                  "uuid": "14b90dc6-2ffe-4a37-b3e3-542acd71b666"
+                },
+                {
+                  "key": "type",
+                  "value": "pdf",
+                  "type": "text",
+                  "uuid": "ed8bd5aa-bdf4-4e02-9c97-d2e13b8255ee"
+                },
+                {
+                  "key": "url",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "2b07fac7-c08d-46ba-b782-518615309657"
+                },
+                {
+                  "key": "estimatedDuration",
+                  "value": "15",
+                  "type": "text",
+                  "uuid": "940e7017-4ae7-434e-927d-99d2eec62091"
+                },
+                {
+                  "key": "displayOrder",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "5968dcd6-5c60-4d97-ac9b-49b5aed4c6a1"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "uuid": "ec237433-f0de-404a-be8d-654926e3cf50",
+                  "src": "/home/lhandouz/Downloads/mongodb-live-coding-guide.pdf"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/resources/6ace7c04b2be5b3f7f96949e",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "resources",
+                "6ace7c04b2be5b3f7f96949e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/resources/6ace64d737cf6d609afde939",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "resources",
+                "6ace64d737cf6d609afde939"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "enrollments",
+      "item": [
+        {
+          "name": "get enrollments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/enrollments?course=",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "enrollments"
+              ],
+              "query": [
+                {
+                  "key": "course",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get enrollment by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/enrollments/6ad20f515f1161b1650f1bfc",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "enrollments",
+                "6ad20f515f1161b1650f1bfc"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create enrollment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"course\": \"6ad239e6cc58179b055fb3dd\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/enrollments/",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "enrollments",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update enrollment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"completed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/enrollments/6ad20772cc59f8f5ac731716",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "enrollments",
+                "6ad20772cc59f8f5ac731716"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete enrollment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://{{host}}:3000/api/enrollments/6ad20772cc59f8f5ac731716",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "enrollments",
+                "6ad20772cc59f8f5ac731716"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "progressions",
+      "item": [
+        {
+          "name": "complete progression",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://{{host}}:3000/api/progressions/6ad239e6cc58179b055fb3e2/complete",
+              "protocol": "http",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "progressions",
+                "6ad239e6cc58179b055fb3e2",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
