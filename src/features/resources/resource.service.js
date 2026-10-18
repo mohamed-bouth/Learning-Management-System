@@ -56,8 +56,9 @@ async function getResourceById(resourceId, user)
         course: resource.module.course._id,
     })
         const progress = await Progress.create({
-            enrollment,
+            enrollment: enrollment._id,
             learner: user.userId,
+            course: enrollment.course,
             module: resource.module._id,
             resource: resource._id,
             status: "inProgress", 
@@ -167,8 +168,6 @@ async function deleteResource(resourceId, user) {
     await authorizeTarget({ Model: Resource, id: resourceId, user, mode: "manage" });
 
     const resource = await Resource.findById(resourceId).populate("upload").populate({path : "module", populate: { path: "course" }})
-
-    console.log(resource)
 
     const course = await Course.findById(resource.module.course)
     const module = await Module.findById(resource.module)
