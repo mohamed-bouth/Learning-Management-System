@@ -2,12 +2,21 @@ import mongoose from "mongoose";
 
 const progressionSchema = new mongoose.Schema(
     {
+        course: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+            required: true,
+        },
         enrollment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Enrollment",
             required: true
         },
-
+        learner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
         module: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Module",

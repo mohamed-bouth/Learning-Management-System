@@ -28,6 +28,15 @@ const enrollmentSchema = mongoose.Schema({
 
 }, { timestamps: true })
 
+enrollmentSchema.virtual("progressions", {
+    ref: "Progression",
+    localField: "_id",
+    foreignField: "enrollment"
+});
+
+enrollmentSchema.set("toObject", { virtuals: true });
+enrollmentSchema.set("toJSON", { virtuals: true });
+
 enrollmentSchema.index({ learner: 1, course: 1 }, { unique: true });
 
 export default mongoose.model("Enrollment", enrollmentSchema)

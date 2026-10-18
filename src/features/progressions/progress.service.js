@@ -2,8 +2,10 @@ import Progress from "./progress.module.js";
 import Enrollment from "../enrollments/enrollment.module.js";
 import Module from "../modules/module.module.js";
 import Resource from "../resources/resource.module.js";
-import { authorizationError, notFoundError } from "../../utils/accessControl.js";
+import Course from "../courses/course.module.js"
+import { authorizationError, authorizeTarget, getAccessibleCourseFilter, notFoundError } from "../../utils/accessControl.js";
 import { isHaveAccessToThatModule, isHaveAccessToThatResource } from "../resources/resource.service.js";
+import { populate } from "dotenv";
 
 async function updateEnrollmentProgress(enrollment) {
 	const modules = await Module.find({ course: enrollment.course }).select("_id");
@@ -106,4 +108,59 @@ async function completeResourceProgression(resourceId, user) {
 	return updatedProgression
 }
 
-export { completeResourceProgression };
+async function getCoursesProgressionsService(user){
+	
+	const filter = await getAccessibleCourseFilter(user, { requireEnrollment : true })
+
+	const courses = await Course.find(filter).
+	populate({path: "user", select: "name"}).
+	populate({path: "category", select: "name"}).
+	populate({path: 'enrollments', populate:[ {path: "learner", select: "name _id"}, {path: "progressions" , select: " resource status completedAt startedAt" , populate: {path: "resource", select: " title"}}]})
+
+	if(user.permission.scope === 'published'){
+		console.log('published')
+		courses.forEach(course => {
+			const courseEnrollments = course.enrollments.filter((enrollment) => {
+				if(enrollment.learner._id.toString() === user.userId.toString()){
+					return enrollment
+				}
+			})
+
+			course.enrollments = courseEnrollments
+		});
+	}
+
+	return courses
+}
+
+async function getCoursesProgressionsByIdService(courseId, user){
+
+	await authorizeTarget({
+		Model: Course,
+		id: courseId,
+		user,
+		mode: "read",
+		requireEnrollment: true
+	})
+
+	const courses = await Course.findById(courseId).
+	populate({path: "user", select: "name"}).
+	populate({path: "category", select: "name"}).
+	populate({path: 'enrollments', populate:[ {path: "learner", select: "name _id"}, {path: "progressions" , select: " resource status completedAt startedAt" , populate: {path: "resource", select: " title"}}]})
+
+	if(user.permission.scope === 'published'){
+		courses.forEach(course => {
+			const courseEnrollments = course.enrollments.filter((enrollment) => {
+				if(enrollment.learner._id.toString() === user.userId.toString()){
+					return enrollment
+				}
+			})
+
+			course.enrollments = courseEnrollments
+		});
+	}
+
+	return courses
+}
+
+export { completeResourceProgression, getCoursesProgressionsService, getCoursesProgressionsByIdService };

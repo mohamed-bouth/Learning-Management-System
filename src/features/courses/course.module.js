@@ -59,6 +59,18 @@ courseSchema.virtual("modules", {
   foreignField: "course",
 });
 
+courseSchema.virtual("progressions", {
+  ref: "Progression",
+  localField: "_id",
+  foreignField: "course",
+})
+
+courseSchema.virtual("enrollments", {
+  ref: "Enrollment",
+  localField: "_id",
+  foreignField: "course",
+})
+
 courseSchema.set("toJSON", {
   virtuals: true,
 });
