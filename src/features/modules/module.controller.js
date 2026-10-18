@@ -94,11 +94,11 @@ async function updateModule(req, res, next) {
 		}
 
         const updateData = validation.data;
-		const updatedModule =  await updateModuleService(id,updateData, req.user);
+		const module =  await updateModuleService(id,updateData, req.user);
 		return res.status(200).json({
             success: true,
             message: "Module updated with success!",
-            data: {updatedModule}
+            data: {module}
         });
 	}catch(error){
 		next(error)
