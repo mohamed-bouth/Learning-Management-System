@@ -2,7 +2,7 @@ import Module from "./module.module.js"
 import Resource from "../resources/resource.module.js"
 import Course from "../courses/course.module.js"
 import mongoose from "mongoose"
-import { authorizeTarget, getAccessibleFilter } from "../../utils/accessControl.js";
+import { authorizeTarget, getAccessibleFilter, notFoundError } from "../../utils/accessControl.js";
 
 async function getModulesService(metaData, user) {
 
@@ -29,6 +29,29 @@ async function getModuleByIdService(moduleId, user) {
     await authorizeTarget({ Model: Module, id: moduleId, user, mode: "read" })
 
     let module = await Module.findById(moduleId).populate('resources')
+    
+    if(!module){
+        throw notFoundError('module')
+    }
+
+    if(!module.resources){
+        return module
+    }
+
+    const allResources = module.resources
+
+    const filter = await getAccessibleFilter(Resource, user, { requireEnrollment: true });
+
+    if(filter._id){
+        const canAccessResources = filter._id?.$in
+
+        const validResources = allResources.filter((resource) => {
+            return canAccessResources.some(accessResource => accessResource.toString() === resource._id.toString())
+        })
+
+        module.resources = validResources
+    }
+
 
     return module
 }
