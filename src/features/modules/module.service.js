@@ -96,6 +96,21 @@ async function updateModuleService(moduleId, updateData, user) {
 
     await authorizeTarget({ Model: Module, id: moduleId, user, mode: "manage" })
 
+    if(updateData.course && user.permission.scope === 'own'){
+        const course = await Course.findById(updateData.course)
+
+        if(!course){
+            throw notFoundError('Course')
+        }
+
+        if(course.user.toString() !== user.userId.toString()){
+            const error =  new Error('Access prohibited !')
+            error.name = "AuthorizationError",
+            error.status = 403
+            throw error
+        }
+    }
+
     const updateModel = await Module.findByIdAndUpdate(moduleId, updateData, {new: true })
 
     return updateModel
