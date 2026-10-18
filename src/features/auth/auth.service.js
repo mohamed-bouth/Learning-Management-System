@@ -71,7 +71,7 @@ export async function loginService(body) {
         throw error
     }
 
-    if(user.status === "suspended"){
+    if(user.status !== "active"){
         const error = new Error("Your Account is Suspended, Contact Support!")
         error.status = 401
         error.name = "AuthenticationError"
