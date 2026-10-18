@@ -30,7 +30,8 @@ const rolesData = [
       { name: 'enrollment:read', scope: 'all' },
       { name: 'enrollment:create', scope: 'all' },
       { name: 'enrollment:update', scope: 'all' },
-      { name: 'enrollment:delete', scope: 'all' }
+      { name: 'enrollment:delete', scope: 'all' },
+      { name: 'progression:read', scope: 'all'}
     ]
   },
   {
@@ -53,7 +54,8 @@ const rolesData = [
       { name: 'enrollment:read', scope: 'own' },
       { name: 'enrollment:create', scope: 'own' },
       { name: 'enrollment:update', scope: 'own' },
-      { name: 'enrollment:delete', scope: 'own' }
+      { name: 'enrollment:delete', scope: 'own' },
+      { name: 'progression:read', scope: 'own'}
     ]
   },
   {
@@ -67,7 +69,8 @@ const rolesData = [
       { name: 'resource:read', scope: 'published' },
       { name: 'enrollment:read', scope: 'published' },
       { name: 'enrollment:create', scope: 'published' },
-      { name: 'progression:complete', scope: 'published' }
+      { name: 'progression:complete', scope: 'published' },
+      { name: 'progression:read', scope: 'published'}
     ]
   }
 ];

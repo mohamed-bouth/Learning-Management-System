@@ -126,6 +126,10 @@ const permissionsData = [
     name: "progression:complete",
     description: "Allows learners to complete their own resource progression.",
   },
+  {
+    name: "progression:read",
+    description: "Allows viewing progression.",
+  },
 ];
 
 export default permissionsData;
