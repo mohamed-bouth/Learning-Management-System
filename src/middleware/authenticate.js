@@ -29,7 +29,7 @@ async function authenticate(req, res, next) {
 
     const user = await User.findById(payload.userId)
 
-    if(!user || user.status === "suspended"){
+    if(!user || user.status !== "active"){
         const error = new Error(!user ? "User not found" : "Your Account is Suspended, Contact Support!")
         error.status = !user ? 404 : 401
         error.name = "AuthenticationError"
